@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Doma Holding Company — Building Tomorrow's Legacy</title>
+  <meta name="description" content="Doma Holding — A diversified group delivering excellence in real estate, infrastructure, technology and investment."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <link href="assets/css/style.css" rel="stylesheet"/>
+  <link href="assets/css/animations.css" rel="stylesheet"/>
+
+
+
+  <style>
+/* =========================================================
+   HERO VIDEO SLIDER — Self-contained styles
+========================================================= */
+:root{
+  --gold:#BC842B; --gold-l:#d4a044; --gold-pale:rgba(188,132,43,.12);
+  --navy:#304A61; --navy-dk:#1e2f3d;
+  --bg:#0d1a24; --bg-card:#162330;
+  --white:#fff; --grey:#9b9b9b;
+  --font-d:'Outfit',sans-serif; --font-h:'Poppins',sans-serif; --font-b:'Inter',sans-serif;
+}
+
+/* ── Hero wrapper ── */
+#heroSection{
+  position:relative; height:100vh; min-height:720px;
+  overflow:hidden; display:flex; align-items:center;
+}
+
+/* ── Each slide ── */
+.hs{
+  position:absolute; inset:0; z-index:2;
+  opacity:0; pointer-events:none;
+  transition:opacity 1.4s cubic-bezier(.4,0,.2,1);
+}
+.hs.active{ opacity:1; z-index:3; pointer-events:all; }
+
+/* ── Background layer (gradient + video) ── */
+.hs-bg{
+  position:absolute; inset:0; overflow:hidden;
+  background:#0d1a24;         /* solid fallback */
+}
+.hs-bg-grad{                  /* gradient fallback — always visible under video */
+  position:absolute; inset:0; z-index:0;
+  background:var(--grad,linear-gradient(135deg,#0d1a24,#304A61));
+}
+.hs-bg video{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:1;
+  transform:scale(1.08);
+  transition:transform 9s ease;
+  opacity:0;                  /* hidden until canplay */
+}
+.hs-bg video.ready{ opacity:1; }          /* shown when loaded */
+.hs.active .hs-bg video{ transform:scale(1); }
+
+/* ── Overlay gradient ── */
+.hs-ov{
+  position:absolute; inset:0; z-index:2;
+  background:linear-gradient(112deg,rgba(13,26,36,.94) 0%,rgba(13,26,36,.68) 48%,rgba(13,26,36,.15) 100%);
+}
+
+/* ── Slide text content ── */
+.hs-body{
+  position:absolute; inset:0; z-index:4;
+  display:flex; align-items:center;
+}
+.hs-inner{
+  max-width:700px;
+  opacity:0; transform:translateY(36px);
+  transition:opacity .95s .55s ease, transform .95s .55s ease;
+}
+.hs.active .hs-inner{ opacity:1; transform:translateY(0); }
+
+/* eyebrow */
+.hs-eye{
+  display:inline-flex; align-items:center; gap:9px;
+  font-size:.74rem; font-weight:700; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--gold); margin-bottom:18px;
+}
+
+/* title */
+.hs-title{
+  font-family:var(--font-d); font-size:clamp(2.7rem,6.2vw,5.2rem);
+  font-weight:800; line-height:1.07; color:#fff; margin-bottom:22px;
+}
+.hs-title .gw{ color:var(--gold); }
+.hs-title .ow{ -webkit-text-stroke:1px rgba(255,255,255,.35); color:transparent; }
+
+/* desc */
+.hs-desc{
+  font-size:1rem; color:rgba(255,255,255,.68);
+  line-height:1.82; max-width:520px; margin-bottom:36px;
+}
+
+/* buttons row */
+.hs-btns{ display:flex; gap:14px; flex-wrap:wrap; }
+
+/* ── Decorative grid & particles ── */
+#heroSection .gp{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(188,132,43,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(188,132,43,.04) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+
+/* ── Dot controls (right side) ── */
+.hs-dots{
+  position:absolute; right:34px; top:50%; transform:translateY(-50%);
+  z-index:10; display:flex; flex-direction:column; gap:12px;
+}
+.hs-dot{
+  width:8px; height:8px; border-radius:50%;
+  background:rgba(255,255,255,.28); border:1px solid rgba(255,255,255,.2);
+  cursor:pointer;
+  transition:all .38s cubic-bezier(.4,0,.2,1);
+}
+.hs-dot.active{
+  background:var(--gold); border-color:var(--gold);
+  height:28px; border-radius:4px;
+  box-shadow:0 0 12px var(--gold);
+}
+
+/* ── Prev / Next arrows ── */
+.hs-arr{
+  position:absolute; top:50%; transform:translateY(-50%); z-index:10;
+  width:50px; height:50px; border-radius:50%;
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2);
+  color:#fff; font-size:.95rem;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .3s; backdrop-filter:blur(10px);
+}
+.hs-arr:hover{ background:var(--gold); border-color:var(--gold); color:#111; transform:translateY(-50%) scale(1.08); }
+#hsPrev{ left:22px; }
+#hsNext{ right:22px; }
+
+/* ── Slide counter ── */
+.hs-ctr{
+  position:absolute; bottom:106px; left:50%; transform:translateX(-50%);
+  z-index:10; font-family:var(--font-d); font-size:.72rem;
+  font-weight:700; letter-spacing:.22em; color:rgba(255,255,255,.38);
+}
+
+/* ── Bottom progress bar ── */
+.hs-bar{ position:absolute; bottom:84px; left:0; right:0; z-index:10; height:2px; background:rgba(255,255,255,.08); }
+.hs-bar-fill{
+  height:100%; width:0%;
+  background:linear-gradient(90deg,var(--gold),#f0c060);
+  box-shadow:0 0 8px var(--gold);
+}
+
+/* ── Scroll indicator ── */
+.scroll-ind{
+  position:absolute; bottom:88px; right:80px;
+  z-index:10; display:flex; flex-direction:column; align-items:center;
+  gap:6px; opacity:.46;
+}
+.sm{ width:22px; height:36px; border:2px solid rgba(255,255,255,.38); border-radius:11px; position:relative; }
+.sw{
+  width:3px; height:7px; background:var(--gold); border-radius:2px;
+  position:absolute; top:6px; left:50%; transform:translateX(-50%);
+  animation:sw 2s ease infinite;
+}
+@keyframes sw{ 0%{top:6px;opacity:1} 100%{top:20px;opacity:0} }
+
+/* ── Stats bar ── */
+.hbar{
+  position:absolute; bottom:0; left:0; right:0; z-index:10;
+  background:rgba(13,26,36,.9); backdrop-filter:blur(22px);
+  border-top:1px solid rgba(188,132,43,.22);
+  box-shadow:0 -4px 30px rgba(0,0,0,.3);
+}
+.hbar-inner{ display:grid; grid-template-columns:repeat(4,1fr); }
+.hbar-item{
+  padding:20px 24px; border-right:1px solid rgba(255,255,255,.06);
+  display:flex; align-items:center; gap:14px;
+}
+.hbar-item:last-child{ border-right:none; }
+.hbar-ico{
+  width:40px; height:40px; border-radius:6px;
+  background:rgba(188,132,43,.12); border:1px solid rgba(188,132,43,.25);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--gold); font-size:.95rem; flex-shrink:0;
+}
+.hbar-val{
+  font-family:var(--font-d); font-size:1.5rem; font-weight:800;
+  color:#fff; line-height:1;
+}
+.hbar-lbl{ font-size:.66rem; color:var(--grey); text-transform:uppercase; letter-spacing:.07em; margin-top:3px; }
+
+/* ── Slide transition indicator line ── */
+.hs-line{
+  position:absolute; bottom:82px; left:50%; z-index:10;
+  transform:translateX(-50%);
+  display:flex; gap:6px; align-items:center;
+}
+.hs-line-seg{
+  height:2px; width:30px; background:rgba(255,255,255,.15);
+  border-radius:2px; transition:all .4s ease; cursor:pointer;
+}
+.hs-line-seg.active{
+  width:54px; background:var(--gold);
+  box-shadow:0 0 8px var(--gold);
+}
+
+/* ── responsive ── */
+@media(max-width:991px){
+  .hbar-inner{ grid-template-columns:repeat(2,1fr); }
+  .hbar-item:nth-child(2){ border-right:none; }
+  #hsPrev,#hsNext{ display:none; }
+  .hs-dots{ right:14px; }
+}
+@media(max-width:600px){
+  .hbar-inner{ grid-template-columns:repeat(2,1fr); }
+  .hs-title{ font-size:clamp(2.2rem,9vw,3.2rem); }
+}
+
+/* =========================================================
+   TESTIMONIAL SLIDER
+========================================================= */
+.tslider-outer{ position:relative; overflow:hidden; }
+.tslider-track{
+  display:flex;
+  transition:transform .68s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+.tslide{
+  flex-shrink:0; width:calc(100%/3);
+  padding:0 12px; box-sizing:border-box;
+}
+@media(max-width:991px){ .tslide{ width:50%; } }
+@media(max-width:600px){ .tslide{ width:100%; } }
+
+/* Dots */
+.t-dots{ display:flex; justify-content:center; gap:8px; margin-top:30px; }
+.t-dot{
+  width:8px; height:8px; border-radius:50%;
+  background:rgba(255,255,255,.2); border:1px solid rgba(255,255,255,.15);
+  cursor:pointer; transition:all .3s ease;
+}
+.t-dot.active{
+  background:var(--gold); border-color:var(--gold);
+  width:26px; border-radius:4px;
+  box-shadow:0 0 10px rgba(188,132,43,.6);
+}
+
+/* Arrow buttons */
+.t-arrs{ display:flex; gap:10px; }
+.t-arr{
+  width:46px; height:46px; border-radius:50%;
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.6); font-size:.88rem;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .3s;
+}
+.t-arr:hover{ background:var(--gold); border-color:var(--gold); color:#111; }
+
+/* Card hover lift */
+.testimonial-card{
+  transition:transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+.testimonial-card:hover{
+  transform:translateY(-8px);
+  border-color:rgba(188,132,43,.35)!important;
+  box-shadow:0 24px 60px rgba(0,0,0,.45), 0 0 30px rgba(188,132,43,.12);
+}
+
+/* Rating stars animation */
+@keyframes starPop{ 0%{transform:scale(0) rotate(-20deg);opacity:0} 80%{transform:scale(1.2)} 100%{transform:scale(1);opacity:1} }
+.testimonial-stars i{ display:inline-block; animation:starPop .4s ease forwards; opacity:0; }
+.testimonial-stars i:nth-child(1){ animation-delay:.0s }
+.testimonial-stars i:nth-child(2){ animation-delay:.07s }
+.testimonial-stars i:nth-child(3){ animation-delay:.14s }
+.testimonial-stars i:nth-child(4){ animation-delay:.21s }
+.testimonial-stars i:nth-child(5){ animation-delay:.28s }
+
+/* =========================================
+   LANDMARK SECTION
+========================================= */
+
+.landmark-section{
+    background:#0f1e2b;
+    overflow:hidden;
+    position:relative;
+    padding:80px 0;
+    font-family:'Outfit', sans-serif;
+}
+
+/* Glow Effect */
+
+.landmark-section::before{
+    content:'';
+    position:absolute;
+    top:-200px;
+    left:-200px;
+    width:500px;
+    height:500px;
+    background:rgba(181,181,24,0.08);
+    border-radius:50%;
+    filter:blur(120px);
+}
+
+.landmark-section::after{
+    content:'';
+    position:absolute;
+    right:-150px;
+    bottom:-150px;
+    width:400px;
+    height:400px;
+    background:rgba(255,255,255,0.03);
+    border-radius:50%;
+    filter:blur(100px);
+}
+
+/* =========================================
+   CENTER TITLE
+========================================= */
+
+.landmark-section .main-title{
+    color:#ffffff;
+    font-size:64px;
+    line-height:1.15;
+    font-weight:300;
+    margin-bottom:60px;
+    letter-spacing:-2px;
+}
+
+.landmark-section .main-title span{
+    font-weight:700;
+    color:#ffffff;
+}
+
+/* =========================================
+   BUILDING IMAGE
+========================================= */
+
+.landmark-section .building-image{
+    display:flex;
+    justify-content:center;
+    position:relative;
+}
+
+.landmark-section .building-image img{
+    width:100%;
+    max-width:360px;
+    height:540px;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+    border-radius:20px;
+    transition:0.5s ease;
+    box-shadow:
+    0 20px 80px rgba(0,0,0,0.45);
+}
+
+.landmark-section .building-image img:hover{
+    transform:translateY(-10px) scale(1.03);
+}
+
+/* =========================================
+   STATS
+========================================= */
+
+.landmark-section .stats-wrapper{
+    height:100%;
+    min-height:700px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-evenly;
+    position:relative;
+    z-index:2;
+}
+
+.landmark-section .left-stats{
+    align-items:flex-start;
+    padding-left:70px;
+}
+
+.landmark-section .right-stats{
+    align-items:flex-end;
+    padding-right:70px;
+}
+
+.landmark-section .stat-item{
+    color:#ffffff;
+    max-width:230px;
+    transition:0.4s ease;
+    cursor:pointer;
+}
+
+.landmark-section .stat-item:hover{
+    transform:translateY(-8px);
+}
+
+.landmark-section .stat-item h2{
+    font-size:62px;
+    line-height:1;
+    font-weight:300;
+    color:#b5b518;
+    margin-bottom:12px;
+}
+
+.landmark-section .stat-item p{
+    margin:0;
+    font-size:22px;
+    line-height:1.5;
+    color:#ffffff;
+    font-weight:300;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width:1399px){
+
+    .landmark-section .main-title{
+        font-size:52px;
+    }
+
+    .landmark-section .stat-item h2{
+        font-size:50px;
+    }
+
+    .landmark-section .stat-item p{
+        font-size:18px;
+    }
+}
+
+@media (max-width:991px){
+
+    .landmark-section{
+        padding:70px 0;
+    }
+
+    .landmark-section .row{
+        gap:50px;
+    }
+
+    .landmark-section .main-title{
+        font-size:42px;
+        margin-bottom:40px;
+        letter-spacing:-1px;
+    }
+
+    .landmark-section .building-image img{
+        max-width:300px;
+        height:430px;
+    }
+
+    .landmark-section .stats-wrapper{
+        min-height:auto;
+        flex-direction:row;
+        flex-wrap:wrap;
+        justify-content:center;
+        align-items:center;
+        gap:40px;
+        text-align:center;
+    }
+
+    .landmark-section .left-stats,
+    .landmark-section .right-stats{
+        align-items:center;
+        padding:0;
+    }
+
+    .landmark-section .stat-item{
+        max-width:200px;
+    }
+}
+
+@media (max-width:767px){
+
+    .landmark-section{
+        padding:60px 15px;
+    }
+
+    .landmark-section .main-title{
+        font-size:32px;
+        line-height:1.3;
+        margin-bottom:35px;
+    }
+
+    .landmark-section .building-image img{
+        max-width:220px;
+        height:320px;
+    }
+
+    .landmark-section .stats-wrapper{
+        gap:30px;
+    }
+
+    .landmark-section .stat-item h2{
+        font-size:38px;
+    }
+
+    .landmark-section .stat-item p{
+        font-size:15px;
+        line-height:1.5;
+    }
+}
+  </style>
+</head>
+<body>
+
+<div class="noise-overlay"></div>
+<button class="back-to-top" id="backToTop"><i class="fas fa-chevron-up"></i></button>
+<div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+<!-- MOBILE NAV -->
+<aside class="mobile-nav-panel" id="mobileNavPanel">
+  <button class="mobile-nav-close" id="mobileNavClose"><i class="fas fa-times"></i></button>
+  <nav class="mobile-nav-links">
+    <a href="index.html"    class="mobile-nav-link active">Home <i class="fas fa-chevron-right"></i></a>
+    <a href="about.html"    class="mobile-nav-link">About <i class="fas fa-chevron-right"></i></a>
+    <a href="projects.html" class="mobile-nav-link">Projects <i class="fas fa-chevron-right"></i></a>
+    <a href="status.html"   class="mobile-nav-link">Status <i class="fas fa-chevron-right"></i></a>
+    <a href="services.html" class="mobile-nav-link">Services <i class="fas fa-chevron-right"></i></a>
+    <a href="blog.html"     class="mobile-nav-link">Blog <i class="fas fa-chevron-right"></i></a>
+    <a href="contact.html"  class="mobile-nav-link">Contact <i class="fas fa-chevron-right"></i></a>
+  </nav>
+  <div style="margin-top:32px;"><a href="contact.html" class="btn-gold" style="display:flex;justify-content:center;"><i class="fas fa-paper-plane"></i>&nbsp;Get In Touch</a></div>
+</aside>
+
+<!-- ═══ NAVBAR ═══ -->
+<header class="doma-nav" id="domaNav">
+  <div class="container"><div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-mark">D</div>
+      <div><div class="logo-text-main">DOMA<span>.</span></div><span class="logo-text-sub">Holding Company</span></div>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html"    class="nav-link active">Home</a>
+      <a href="about.html"    class="nav-link">About</a>
+      <div class="nav-dropdown">
+        <a href="projects.html" class="nav-link">Projects <i class="fas fa-chevron-down" style="font-size:.6rem;"></i></a>
+        <div class="nav-dropdown-menu">
+          <a href="projects.html"       class="dropdown-item"><i class="fas fa-th-large"></i> All Projects</a>
+          <a href="project-detail.html" class="dropdown-item"><i class="fas fa-building"></i> Project Detail</a>
+          <a href="status.html"         class="dropdown-item"><i class="fas fa-chart-line"></i> Project Status</a>
+        </div>
+      </div>
+      <a href="services.html" class="nav-link">Services</a>
+      <a href="blog.html"     class="nav-link">Blog</a>
+      <a href="contact.html"  class="nav-link">Contact</a>
+    </nav>
+    <a href="contact.html" class="btn-gold nav-cta"><i class="fas fa-paper-plane"></i> Get In Touch</a>
+    <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+  </div></div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO VIDEO SLIDER
+═══════════════════════════════════════════════════════ -->
+<section id="heroSection">
+  <!-- Global decorative layers -->
+  <div class="gp"></div>
+  <div class="particles-bg" style="z-index:1;pointer-events:none;"></div>
+
+  <!-- ══ SLIDE 1 — Real Estate ══ -->
+  <div class="hs active" id="hs0">
+    <div class="hs-bg">
+      <div class="hs-bg-grad" style="--grad:linear-gradient(135deg,#0d1a24 0%,#1e3a52 55%,#304A61 100%);"></div>
+      <video id="v0" muted loop playsinline preload="metadata" autoplay>
+        <source src="assets/video/Architectural Animation Showreel 2017.mp4" type="video/mp4"/>
+     
+      </video>
+    </div>
+    <div class="hs-ov"></div>
+    <div class="hs-body">
+      <div class="container">
+        <div class="hs-inner">
+          <div class="hs-eye"><i class="fas fa-star"></i> Trusted Since 2008 &nbsp;·&nbsp; 15+ Years of Excellence</div>
+          <h1 class="hs-title">
+            Building <span class="gw">Tomorrow's</span><br>
+            <span class="ow">Legacy</span> Today
+          </h1>
+          <p class="hs-desc">Doma Holding is a diversified powerhouse spanning real estate, infrastructure, technology and investment — engineered for lasting impact across generations.</p>
+          <div class="hs-btns">
+            <a href="projects.html" class="btn-gold btn-ripple"><i class="fas fa-th-large"></i> Explore Projects</a>
+            <a href="about.html"    class="btn-outline"><i class="fas fa-play-circle"></i> Our Story</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2 — Infrastructure ══ -->
+  <div class="hs" id="hs1">
+    <div class="hs-bg">
+      <div class="hs-bg-grad" style="--grad:linear-gradient(135deg,#0a1a08 0%,#18300f 55%,#243a1e 100%);"></div>
+      <video id="v1" muted loop playsinline preload="none">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-construction-workers-in-a-site-4001-large.mp4" type="video/mp4"/>
+        <source src="https://cdn.coverr.co/videos/coverr-timelapse-of-a-construction-site-8193/1080p.mp4" type="video/mp4"/>
+      </video>
+    </div>
+    <div class="hs-ov"></div>
+    <div class="hs-body">
+      <div class="container">
+        <div class="hs-inner">
+          <div class="hs-eye"><i class="fas fa-hard-hat"></i> Infrastructure Excellence</div>
+          <h1 class="hs-title">
+            Engineering the <span class="gw">Future's</span><br>
+            <span class="ow">Foundation</span>
+          </h1>
+          <p class="hs-desc">68km expressways, smart bridges, and urban utilities — built with engineering precision and delivered ahead of schedule across the MENA region.</p>
+          <div class="hs-btns">
+            <a href="projects.html" class="btn-gold btn-ripple"><i class="fas fa-road"></i> View Infrastructure</a>
+            <a href="contact.html"  class="btn-outline"><i class="fas fa-handshake"></i> Partner With Us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3 — Technology ══ -->
+  <div class="hs" id="hs2">
+    <div class="hs-bg">
+      <div class="hs-bg-grad" style="--grad:linear-gradient(135deg,#080814 0%,#12122e 55%,#1a1a40 100%);"></div>
+      <video id="v2" muted loop playsinline preload="none">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-futuristic-devices-99786-large.mp4" type="video/mp4"/>
+        <source src="https://cdn.coverr.co/videos/coverr-city-at-night-8576/1080p.mp4" type="video/mp4"/>
+      </video>
+    </div>
+    <div class="hs-ov"></div>
+    <div class="hs-body">
+      <div class="container">
+        <div class="hs-inner">
+          <div class="hs-eye"><i class="fas fa-microchip"></i> Technology Ventures</div>
+          <h1 class="hs-title">
+            Innovating at the <span class="gw">Speed</span><br>
+            of <span class="ow">Tomorrow</span>
+          </h1>
+          <p class="hs-desc">DomaTech incubates AI, PropTech, and FinTech ventures transforming how the region builds, transacts, and connects at scale.</p>
+          <div class="hs-btns">
+            <a href="services.html" class="btn-gold btn-ripple"><i class="fas fa-rocket"></i> Tech Ventures</a>
+            <a href="projects.html" class="btn-outline"><i class="fas fa-th-large"></i> Our Portfolio</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 4 — Energy ══ -->
+  <div class="hs" id="hs3">
+    <div class="hs-bg">
+      <div class="hs-bg-grad" style="--grad:linear-gradient(135deg,#140a00 0%,#281a00 55%,#3a2800 100%);"></div>
+      <video id="v3" muted loop playsinline preload="none">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-solar-energy-panels-in-the-desert-40897-large.mp4" type="video/mp4"/>
+        <source src="https://cdn.coverr.co/videos/coverr-solar-panels-7606/1080p.mp4" type="video/mp4"/>
+      </video>
+    </div>
+    <div class="hs-ov"></div>
+    <div class="hs-body">
+      <div class="container">
+        <div class="hs-inner">
+          <div class="hs-eye"><i class="fas fa-solar-panel"></i> Energy &amp; Sustainability</div>
+          <h1 class="hs-title">
+            Powering a <span class="gw">Cleaner</span><br>
+            <span class="ow">Tomorrow</span>
+          </h1>
+          <p class="hs-desc">500MW solar farms, green hydrogen plants, and net-zero commitments driving Doma's sustainable future across MENA.</p>
+          <div class="hs-btns">
+            <a href="services.html" class="btn-gold btn-ripple"><i class="fas fa-leaf"></i> ESG Strategy</a>
+            <a href="contact.html"  class="btn-outline"><i class="fas fa-dollar-sign"></i> Invest With Us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <button class="hs-arr" id="hsPrev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+  <button class="hs-arr" id="hsNext" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+
+  <div class="hs-dots" id="hsDots">
+    <div class="hs-dot active"></div>
+    <div class="hs-dot"></div>
+    <div class="hs-dot"></div>
+    <div class="hs-dot"></div>
+  </div>
+
+  <div class="hs-ctr" id="hsCtr">1 / 4</div>
+
+  <!-- Segment line -->
+  <div class="hs-line" id="hsLine">
+    <div class="hs-line-seg active"></div>
+    <div class="hs-line-seg"></div>
+    <div class="hs-line-seg"></div>
+    <div class="hs-line-seg"></div>
+  </div>
+
+  <div class="scroll-ind">
+    <div class="sm"><div class="sw"></div></div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="hbar">
+    <div class="container">
+      <div class="hbar-inner">
+        <div class="hbar-item">
+          <div class="hbar-ico"><i class="fas fa-building"></i></div>
+          <div>
+            <div class="hbar-val"><span data-count="128" data-suffix="+">0</span></div>
+            <div class="hbar-lbl">Projects Delivered</div>
+          </div>
+        </div>
+        <div class="hbar-item">
+          <div class="hbar-ico"><i class="fas fa-users"></i></div>
+          <div>
+            <div class="hbar-val"><span data-count="240" data-suffix="+">0</span></div>
+            <div class="hbar-lbl">Clients Served</div>
+          </div>
+        </div>
+        <div class="hbar-item">
+          <div class="hbar-ico"><i class="fas fa-dollar-sign"></i></div>
+          <div>
+            <div class="hbar-val"><span data-prefix="$" data-count="1.2" data-suffix="B">0</span></div>
+            <div class="hbar-lbl">Assets Under Mgmt</div>
+          </div>
+        </div>
+        <div class="hbar-item">
+          <div class="hbar-ico"><i class="fas fa-globe"></i></div>
+          <div>
+            <div class="hbar-val"><span data-count="18" data-suffix="+">0</span></div>
+            <div class="hbar-lbl">Countries Reached</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     COMPANY INTRO
+═══════════════════════════════════════════════════════ -->
+<section class="intro-section section-pad" style="position:relative;overflow:hidden;">
+  <div class="geo-blob blob-navy" style="width:500px;height:500px;top:-100px;left:-150px;opacity:.3;position:absolute;z-index:0;"></div>
+  <div class="container position-relative">
+    <div class="intro-grid">
+      <div class="reveal-left float-anim-slow">
+        <div class="intro-img-wrap">
+          <div style="width:100%;height:460px;background:linear-gradient(135deg,#1e2f3d,#304A61,rgba(188,132,43,.12));border-radius:20px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+            <div class="particles-bg"></div>
+            <div class="grid-pattern" style="opacity:.4;"></div>
+            <div style="text-align:center;position:relative;z-index:2;">
+              <i class="fas fa-city" style="font-size:6rem;color:rgba(188,132,43,.2);"></i>
+              <div style="font-family:var(--font-display);font-size:.72rem;letter-spacing:.22em;color:var(--grey);margin-top:16px;text-transform:uppercase;">Skyline View — Doma Portfolio</div>
+            </div>
+          </div>
+          <div class="intro-img-overlay"></div>
+          <div class="intro-badge-float glow-anim"><span class="badge-num">15+</span><span class="badge-txt">Years</span></div>
+          <div class="intro-card-float float-anim">
+            <i class="fas fa-trophy"></i>
+            <div><div style="font-size:.8rem;font-weight:700;">Award Winning</div><div style="font-size:.7rem;color:var(--grey);">MENA Business Awards 2024</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="section-label">Who We Are</div>
+        <h2 class="section-title">A Holding Group Built<br>for <span>Lasting Impact</span></h2>
+        <div class="gold-line"></div>
+        <p class="section-subtitle">Since 2008, Doma Holding has grown from a regional real estate firm into a diversified conglomerate spanning six industries — connecting capital, expertise, and innovation.</p>
+        <p style="font-size:.88rem;color:var(--grey);line-height:1.85;margin:18px 0 32px;">With a portfolio exceeding $1.2B in assets under management, we operate with the agility of a startup and the resilience of an institution — guided by transparency, sustainability, and long-term growth.</p>
+        <div class="intro-features">
+          <div class="feature-item hover-lift delay-100"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><div><div class="feature-title">Trust & Integrity</div><div class="feature-text">Transparent governance at every level</div></div></div>
+          <div class="feature-item hover-lift delay-200"><div class="feature-icon"><i class="fas fa-rocket"></i></div><div><div class="feature-title">Innovation Driven</div><div class="feature-text">Tech-forward solutions across sectors</div></div></div>
+          <div class="feature-item hover-lift delay-300"><div class="feature-icon"><i class="fas fa-leaf"></i></div><div><div class="feature-title">Sustainability</div><div class="feature-text">ESG-aligned investment philosophy</div></div></div>
+          <div class="feature-item hover-lift delay-400"><div class="feature-icon"><i class="fas fa-handshake"></i></div><div><div class="feature-title">Partnership</div><div class="feature-text">Committed to stakeholder success</div></div></div>
+        </div>
+        <div style="margin-top:32px;display:flex;gap:14px;flex-wrap:wrap;">
+          <a href="about.html"   class="btn-gold btn-ripple"><i class="fas fa-arrow-right"></i> Learn More</a>
+          <a href="contact.html" class="btn-outline"><i class="fas fa-phone-alt"></i> Talk to Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     FEATURED PROJECTS
+═══════════════════════════════════════════════════════ -->
+<section class="projects-section section-pad" style="background:var(--bg-section);position:relative;overflow:hidden;">
+  <div class="grid-pattern"></div>
+  <div class="geo-blob blob-gold" style="width:400px;height:400px;top:50px;right:-80px;position:absolute;z-index:0;"></div>
+  <div class="container position-relative">
+    <div class="projects-header">
+      <div>
+        <div class="section-label reveal">Featured Projects</div>
+        <h2 class="section-title reveal delay-200">Our <span>Landmark</span> Ventures</h2>
+      </div>
+      <a href="projects.html" class="btn-outline reveal delay-400">View All <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6">
+        <div class="project-card card-3d reveal delay-100">
+          <div class="project-card-img">
+            <div style="width:100%;height:230px;background:linear-gradient(135deg,#1e3a52,#304A61);display:flex;align-items:center;justify-content:center;"><i class="fas fa-building" style="font-size:4rem;color:rgba(188,132,43,.3);"></i></div>
+            <div class="project-card-img-overlay"></div>
+            <div class="project-card-status"><span class="badge-status badge-ongoing">Ongoing</span></div>
+          </div>
+          <div class="project-card-body">
+            <div class="project-industry">Real Estate</div>
+            <h3 class="project-card-title">Doma Tower — Business Bay</h3>
+            <p class="project-card-desc">42-storey Grade-A commercial tower redefining Dubai's skyline with premium office spaces and retail podium.</p>
+            <div class="project-progress-row"><span class="progress-label">Completion</span><span class="progress-pct">73%</span></div>
+            <div class="progress-wrap"><div class="progress-fill" data-width="73"></div></div>
+            <div class="project-meta-row">
+              <div class="project-location"><i class="fas fa-map-marker-alt"></i> Dubai, UAE</div>
+              <a href="project-detail.html" class="project-arrow-btn"><i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="project-card card-3d reveal delay-200">
+          <div class="project-card-img">
+            <div style="width:100%;height:230px;background:linear-gradient(135deg,#1a2a1a,#2a3a2a);display:flex;align-items:center;justify-content:center;"><i class="fas fa-road" style="font-size:4rem;color:rgba(188,132,43,.3);"></i></div>
+            <div class="project-card-img-overlay"></div>
+            <div class="project-card-status"><span class="badge-status badge-completed">Completed</span></div>
+          </div>
+          <div class="project-card-body">
+            <div class="project-industry">Infrastructure</div>
+            <h3 class="project-card-title">North Ring Expressway</h3>
+            <p class="project-card-desc">68km elevated expressway connecting industrial zones to the national highway network. Delivered on time.</p>
+            <div class="project-progress-row"><span class="progress-label">Completion</span><span class="progress-pct">100%</span></div>
+            <div class="progress-wrap"><div class="progress-fill" data-width="100"></div></div>
+            <div class="project-meta-row">
+              <div class="project-location"><i class="fas fa-map-marker-alt"></i> Riyadh, KSA</div>
+              <a href="project-detail.html" class="project-arrow-btn"><i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="project-card card-3d reveal delay-300">
+          <div class="project-card-img">
+            <div style="width:100%;height:230px;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;"><i class="fas fa-microchip" style="font-size:4rem;color:rgba(188,132,43,.3);"></i></div>
+            <div class="project-card-img-overlay"></div>
+            <div class="project-card-status"><span class="badge-status badge-upcoming">Upcoming</span></div>
+          </div>
+          <div class="project-card-body">
+            <div class="project-industry">Technology</div>
+            <h3 class="project-card-title">DomaTech Innovation Hub</h3>
+            <p class="project-card-desc">50,000 sqm smart tech campus for AI startups, research labs, and enterprise R&D centers in Abu Dhabi.</p>
+            <div class="project-progress-row"><span class="progress-label">Planning</span><span class="progress-pct">28%</span></div>
+            <div class="progress-wrap"><div class="progress-fill" data-width="28"></div></div>
+            <div class="project-meta-row">
+              <div class="project-location"><i class="fas fa-map-marker-alt"></i> Abu Dhabi, UAE</div>
+              <a href="project-detail.html" class="project-arrow-btn"><i class="fas fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SERVICES
+═══════════════════════════════════════════════════════ -->
+<section class="services-section section-pad">
+  <div class="container">
+    <div class="row align-items-end mb-5">
+      <div class="col-lg-6 reveal">
+        <div class="section-label">What We Do</div>
+        <h2 class="section-title">Our Core <span>Business Verticals</span></h2>
+      </div>
+      <div class="col-lg-6 text-lg-end reveal delay-300">
+        <a href="services.html" class="btn-outline">All Services <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6"><div class="service-card card-3d reveal delay-100"><div class="service-icon-wrap"><i class="fas fa-city"></i></div><h3 class="service-card-title">Real Estate Development</h3><p class="service-card-desc">From luxury residential towers to mixed-use complexes — iconic properties that appreciate in value.</p><a href="services.html" class="service-learn-more">Learn More <i class="fas fa-arrow-right"></i></a></div></div>
+      <div class="col-lg-4 col-md-6"><div class="service-card card-3d reveal delay-200"><div class="service-icon-wrap"><i class="fas fa-hard-hat"></i></div><h3 class="service-card-title">Infrastructure & Engineering</h3><p class="service-card-desc">Large-scale civil projects, bridges, highways, and smart city utilities with engineering precision.</p><a href="services.html" class="service-learn-more">Learn More <i class="fas fa-arrow-right"></i></a></div></div>
+      <div class="col-lg-4 col-md-6"><div class="service-card card-3d reveal delay-300"><div class="service-icon-wrap"><i class="fas fa-chart-line"></i></div><h3 class="service-card-title">Investment Management</h3><p class="service-card-desc">Strategic capital allocation, private equity, venture building, and portfolio optimization.</p><a href="services.html" class="service-learn-more">Learn More <i class="fas fa-arrow-right"></i></a></div></div>
+      <div class="col-lg-4 col-md-6"><div class="service-card card-3d reveal delay-100"><div class="service-icon-wrap"><i class="fas fa-microchip"></i></div><h3 class="service-card-title">Technology Ventures</h3><p class="service-card-desc">Incubating AI, fintech, proptech, and digital infrastructure companies at scale.</p><a href="services.html" class="service-learn-more">Learn More <i class="fas fa-arrow-right"></i></a></div></div>
+      <div class="col-lg-4 col-md-6"><div class="service-card card-3d reveal delay-200"><div class="service-icon-wrap"><i class="fas fa-solar-panel"></i></div><h3 class="service-card-title">Energy & Utilities</h3><p class="service-card-desc">Renewable energy projects, utility grid solutions, and sustainable energy management.</p><a href="services.html" class="service-learn-more">Learn More <i class="fas fa-arrow-right"></i></a></div></div>
+      <div class="col-lg-4 col-md-6"><div class="service-card card-3d reveal delay-300"><div class="service-icon-wrap"><i class="fas fa-hospital"></i></div><h3 class="service-card-title">Healthcare & Wellness</h3><p class="service-card-desc">Hospital networks, wellness centers, and digital health platforms transforming patient care.</p><a href="services.html" class="service-learn-more">Learn More <i class="fas fa-arrow-right"></i></a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- land mark section -->
+
+<section class="landmark-section">
+
+    <div class="container-fluid px-lg-5">
+
+        <div class="row align-items-center min-vh-100">
+
+            <!-- LEFT STATS -->
+            <div class="col-lg-3 col-md-3 order-2 order-md-1">
+
+                <div class="stats-wrapper left-stats">
+
+                    <div class="stat-item gsap-stat">
+                        <h2>11M+</h2>
+                        <p>Total Area Built <br>(Million sft.)</p>
+                    </div>
+
+                    <div class="stat-item gsap-stat">
+                        <h2>21</h2>
+                        <p>Years Since <br>Inception</p>
+                    </div>
+
+                    <div class="stat-item gsap-stat">
+                        <h2>63</h2>
+                        <p>Number of <br>Completed Projects</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- CENTER CONTENT -->
+            <div class="col-lg-6 col-md-6 text-center order-1 order-md-2">
+
+                <div class="center-content">
+
+                    <h1 class="main-title">
+                        Witness, As We <br>
+                        <span>Transform Your Land</span><br>
+                        to a Landmark
+                    </h1>
+
+                    <div class="building-image">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop" alt="Building">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT STATS -->
+            <div class="col-lg-3 col-md-3 order-3">
+
+                <div class="stats-wrapper right-stats">
+
+                    <div class="stat-item gsap-stat">
+                        <h2>100+</h2>
+                        <p>Number of Projects</p>
+                    </div>
+
+                    <div class="stat-item gsap-stat">
+                        <h2>1500+</h2>
+                        <p>Happy Clients</p>
+                    </div>
+
+                    <div class="stat-item gsap-stat">
+                        <h2>18M+</h2>
+                        <p>Total Area in <br>Pipeline <br>(Million sft.)</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ═══════════════════════════════════════════════════════
+     CLIENT REVIEWS SLIDER
+═══════════════════════════════════════════════════════ -->
+<section class="section-pad" style="background:var(--bg-section);position:relative;overflow:hidden;">
+  <div class="geo-blob blob-navy" style="width:450px;height:450px;top:0;right:-60px;position:absolute;opacity:.35;z-index:0;"></div>
+  <div class="geo-blob blob-gold" style="width:280px;height:280px;bottom:-40px;left:-50px;position:absolute;opacity:.18;z-index:0;"></div>
+  <div class="grid-pattern"></div>
+  <div class="container position-relative">
+
+    <!-- Header row -->
+    <div class="row align-items-center mb-5">
+      <div class="col-lg-7 reveal">
+        <div class="section-label">Client Reviews</div>
+        <h2 class="section-title">What Our <span>Partners Say</span></h2>
+        <p class="section-subtitle" style="max-width:480px;">Real feedback from investors, developers and business partners across 18+ countries.</p>
+      </div>
+      <div class="col-lg-5 reveal delay-200">
+        <div style="display:flex;align-items:center;justify-content:flex-end;gap:16px;flex-wrap:wrap;">
+          <!-- Rating summary -->
+          <div style="text-align:center;padding:16px 22px;background:rgba(255,255,255,.04);border:1px solid rgba(188,132,43,.2);border-radius:var(--radius);">
+            <div style="font-family:var(--font-display);font-size:2.4rem;font-weight:800;color:var(--gold);line-height:1;">4.9</div>
+            <div style="display:flex;gap:3px;justify-content:center;margin:5px 0;color:var(--gold);font-size:.8rem;">
+              <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <div style="font-size:.7rem;color:var(--grey);">Based on 240+ reviews</div>
+          </div>
+          <!-- Arrow buttons -->
+          <div class="t-arrs">
+            <button class="t-arr" id="tPrev" aria-label="Previous"><i class="fas fa-chevron-left"></i></button>
+            <button class="t-arr" id="tNext" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slider -->
+    <div class="tslider-outer reveal delay-100">
+      <div class="tslider-track" id="tTrack">
+
+        <!-- Review 1 -->
+        <div class="tslide">
+          <div class="testimonial-card">
+            <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <span class="quote-mark">"</span>
+            <p class="testimonial-text">Doma's team delivered our mixed-use complex 3 weeks ahead of schedule with zero cost overruns. Their project tracking system gave us real-time visibility we'd never experienced before.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">AH</div>
+              <div><div class="testimonial-name">Ahmed Hassan</div><div class="testimonial-role">CEO, Gulf Properties Group</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="tslide">
+          <div class="testimonial-card">
+            <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <span class="quote-mark">"</span>
+            <p class="testimonial-text">As an institutional investor, transparency is non-negotiable. Doma's investor dashboard and milestone reporting set a new benchmark for portfolio transparency in the region.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">SK</div>
+              <div><div class="testimonial-name">Sarah Khalid</div><div class="testimonial-role">Investment Director, Meridian Capital</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="tslide">
+          <div class="testimonial-card">
+            <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+            <span class="quote-mark">"</span>
+            <p class="testimonial-text">From concept to commissioning, the DomaTech partnership transformed our regional expansion. Their integrated approach across real estate and tech infrastructure is unmatched.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">MR</div>
+              <div><div class="testimonial-name">Marcus Romano</div><div class="testimonial-role">COO, NovaTech Solutions</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 4 -->
+        <div class="tslide">
+          <div class="testimonial-card">
+            <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <span class="quote-mark">"</span>
+            <p class="testimonial-text">Doma Holding managed our $280M infrastructure contract flawlessly. On time, on budget, and with professionalism that sets the standard for construction excellence in Saudi Arabia.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">FN</div>
+              <div><div class="testimonial-name">Faris Al-Nasser</div><div class="testimonial-role">Director, Saudi Roads Authority</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 5 -->
+        <div class="tslide">
+          <div class="testimonial-card">
+            <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <span class="quote-mark">"</span>
+            <p class="testimonial-text">We invested in two Doma projects and returns exceeded projections. Their investor portal is exceptional — monthly updates, real-time progress tracking, and a highly responsive IR team.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">LP</div>
+              <div><div class="testimonial-name">Laura Petrov</div><div class="testimonial-role">Portfolio Manager, EuroAsia Fund</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 6 -->
+        <div class="tslide">
+          <div class="testimonial-card">
+            <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <span class="quote-mark">"</span>
+            <p class="testimonial-text">Doma Marina Residences in Doha was delivered with exceptional quality. Every detail meticulously executed — from structural integrity to premium interior finishes. Truly world-class.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">JA</div>
+              <div><div class="testimonial-name">Jasem Al-Ansari</div><div class="testimonial-role">Founder, Doha Lifestyle Group</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 7 -->
+        <div class="tslide">
+          <div class="testimonial-card">
+            <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <span class="quote-mark">"</span>
+            <p class="testimonial-text">The SunCore Solar project was a landmark achievement. Doma's energy team brought technical depth and commercial discipline that few contractors in the region can match.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">RO</div>
+              <div><div class="testimonial-name">Rania Osman</div><div class="testimonial-role">CEO, Oman Energy Authority</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 8 -->
+        <div class="tslide">
+          <div class="testimonial-card">
+            <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <span class="quote-mark">"</span>
+            <p class="testimonial-text">Working with Doma on our Cairo development was a seamless experience. From permits to handover, their local expertise and global standards were evident at every milestone.</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">KM</div>
+              <div><div class="testimonial-name">Karim Mostafa</div><div class="testimonial-role">Managing Director, Cairo Ventures</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /tTrack -->
+    </div>
+
+    <!-- Dots -->
+    <div class="t-dots" id="tDots">
+      <div class="t-dot active"></div>
+      <div class="t-dot"></div>
+      <div class="t-dot"></div>
+      <div class="t-dot"></div>
+      <div class="t-dot"></div>
+      <div class="t-dot"></div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     CTA
+═══════════════════════════════════════════════════════ -->
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <div class="particles-bg"></div>
+  <div class="cta-glow"></div>
+  <div class="grid-pattern"></div>
+  <div class="container position-relative" style="z-index:2;">
+    <div class="cta-content reveal">
+      <div class="section-label" style="justify-content:center;">Ready to Start?</div>
+      <h2 class="cta-title">Partner with <span style="color:var(--gold);">Doma</span> and<br>Build Your Future</h2>
+      <p class="cta-desc">Whether you're an investor seeking returns, a developer looking for a trusted partner, or a business needing strategic infrastructure — Doma has the expertise and network to deliver.</p>
+      <div class="cta-actions">
+        <a href="contact.html"  class="btn-gold btn-ripple"><i class="fas fa-paper-plane"></i> Start a Conversation</a>
+        <a href="projects.html" class="btn-outline"><i class="fas fa-th-large"></i> View Portfolio</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     PARTNERS MARQUEE
+═══════════════════════════════════════════════════════ -->
+<section class="partners-section">
+  <div class="container">
+    <div class="partners-label">Trusted By Industry Leaders</div>
+    <div class="partners-track-wrap">
+      <div class="partners-track" style="animation:scrollTrack 28s linear infinite;">
+        <div class="partner-logo"><i class="fas fa-building"></i> Gulf Properties</div>
+        <div class="partner-logo"><i class="fas fa-university"></i> Meridian Capital</div>
+        <div class="partner-logo"><i class="fas fa-industry"></i> NovaTech</div>
+        <div class="partner-logo"><i class="fas fa-globe"></i> Global Infra Co</div>
+        <div class="partner-logo"><i class="fas fa-leaf"></i> GreenVentures</div>
+        <div class="partner-logo"><i class="fas fa-heartbeat"></i> MedCare Group</div>
+        <div class="partner-logo"><i class="fas fa-solar-panel"></i> SunCore Energy</div>
+        <div class="partner-logo"><i class="fas fa-rocket"></i> Apex Startups</div>
+        <div class="partner-logo"><i class="fas fa-building"></i> Gulf Properties</div>
+        <div class="partner-logo"><i class="fas fa-university"></i> Meridian Capital</div>
+        <div class="partner-logo"><i class="fas fa-industry"></i> NovaTech</div>
+        <div class="partner-logo"><i class="fas fa-globe"></i> Global Infra Co</div>
+        <div class="partner-logo"><i class="fas fa-leaf"></i> GreenVentures</div>
+        <div class="partner-logo"><i class="fas fa-heartbeat"></i> MedCare Group</div>
+        <div class="partner-logo"><i class="fas fa-solar-panel"></i> SunCore Energy</div>
+        <div class="partner-logo"><i class="fas fa-rocket"></i> Apex Startups</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="doma-footer">
+  <div class="footer-main"><div class="container"><div class="row g-5">
+    <div class="col-lg-4 col-md-6">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:16px;"><div class="logo-mark">D</div><div><div class="logo-text-main">DOMA<span>.</span></div><span class="logo-text-sub">Holding Company</span></div></div>
+        <p>A diversified holding group delivering excellence across real estate, infrastructure, technology, and investment since 2008.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link-btn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-link-btn"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-link-btn"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link-btn"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-2 col-md-6 col-6">
+      <div class="footer-heading">Company</div>
+      <ul class="footer-links">
+        <li><a href="about.html"    class="footer-link"><i class="fas fa-chevron-right"></i> About Us</a></li>
+        <li><a href="projects.html" class="footer-link"><i class="fas fa-chevron-right"></i> Projects</a></li>
+        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Services</a></li>
+        <li><a href="blog.html"     class="footer-link"><i class="fas fa-chevron-right"></i> Blog</a></li>
+        <li><a href="contact.html"  class="footer-link"><i class="fas fa-chevron-right"></i> Contact</a></li>
+      </ul>
+    </div>
+    <div class="col-lg-2 col-md-6 col-6">
+      <div class="footer-heading">Services</div>
+      <ul class="footer-links">
+        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Real Estate</a></li>
+        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Infrastructure</a></li>
+        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Investment</a></li>
+        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Technology</a></li>
+        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Energy</a></li>
+      </ul>
+    </div>
+    <div class="col-lg-4 col-md-6">
+      <div class="footer-heading">Newsletter</div>
+      <p style="font-size:.82rem;color:var(--grey);margin-bottom:6px;">Stay updated with latest projects and investment opportunities.</p>
+      <form class="newsletter-form" novalidate>
+        <div class="newsletter-input-wrap">
+          <input type="email" class="newsletter-input" placeholder="Your email address" required/>
+          <button type="submit" class="newsletter-btn">Subscribe</button>
+        </div>
+      </form>
+    </div>
+  </div></div></div>
+  <div class="container">
+    <div class="footer-bottom">
+      <div class="footer-bottom-text">© 2025 <span>Doma Holding Company</span>. All rights reserved. Crafted with precision.</div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+        <a href="#" style="font-size:.75rem;color:rgba(155,155,155,.5);">Privacy Policy</a>
+        <a href="#" style="font-size:.75rem;color:rgba(155,155,155,.5);">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="assets/js/main.js"></script>
+
+<!-- ═══ HERO SLIDER + TESTIMONIAL SLIDER (inline, no dependency) ═══ -->
+<script>
+(function(){"use strict";
+
+/* ══════════════════════════════════════════
+   HERO VIDEO SLIDER
+══════════════════════════════════════════ */
+var TOTAL   = 4;
+var DUR     = 7000;       // ms per slide
+var cur     = 0;
+var timer   = null;
+var animId  = null;
+
+var slides  = [].slice.call(document.querySelectorAll(".hs"));
+var dots    = [].slice.call(document.querySelectorAll(".hs-dot"));
+var segs    = [].slice.call(document.querySelectorAll(".hs-line-seg"));
+var ctrEl   = document.getElementById("hsCtr");
+var prevBtn = document.getElementById("hsPrev");
+var nextBtn = document.getElementById("hsNext");
+
+/* progress animation */
+var progStart = 0;
+var progRunning = false;
+
+function startProgress(){
+  progStart = performance.now();
+  progRunning = true;
+  if(animId) cancelAnimationFrame(animId);
+  (function tick(now){
+    if(!progRunning) return;
+    var pct = Math.min((now - progStart) / DUR * 100, 100);
+    segs.forEach(function(s,i){
+      if(i === cur){
+        s.style.background = "linear-gradient(90deg,var(--gold) "+pct+"%, rgba(255,255,255,.15) "+pct+"%)";
+      }
+    });
+    if(pct < 100){ animId = requestAnimationFrame(tick); }
+  })(performance.now());
+}
+
+function resetSegs(){
+  segs.forEach(function(s,i){
+    s.classList.toggle("active", i === cur);
+    if(i !== cur) s.style.background = "";
+  });
+}
+
+/* goto slide */
+function goTo(idx){
+  var prev = cur;
+  slides[prev].classList.remove("active");
+  dots[prev] && dots[prev].classList.remove("active");
+
+  /* pause old video */
+  var ov = document.getElementById("v"+prev);
+  if(ov){ ov.pause(); }
+
+  cur = ((idx % TOTAL) + TOTAL) % TOTAL;
+
+  slides[cur].classList.add("active");
+  dots[cur] && dots[cur].classList.add("active");
+  if(ctrEl) ctrEl.textContent = (cur+1)+" / "+TOTAL;
+
+  resetSegs();
+  progRunning = false;
+  startProgress();
+
+  /* play new video */
+  var nv = document.getElementById("v"+cur);
+  if(nv){
+    nv.currentTime = 0;
+    var p = nv.play();
+    if(p && typeof p.catch === "function") p.catch(function(){});
+  }
+}
+
+/* autoplay */
+function startTimer(){ clearInterval(timer); timer = setInterval(function(){ goTo(cur+1); }, DUR); }
+function stopTimer(){ clearInterval(timer); }
+
+/* Load & show video when ready */
+function loadVideo(vid){
+  if(!vid) return;
+  function onReady(){ vid.classList.add("ready"); }
+  if(vid.readyState >= 3){ onReady(); return; }
+  vid.addEventListener("canplay",  onReady, {once:true});
+  vid.addEventListener("canplaythrough", onReady, {once:true});
+}
+
+/* Init all videos */
+for(var i=0; i<TOTAL; i++){ loadVideo(document.getElementById("v"+i)); }
+
+/* Start */
+goTo(0);
+startTimer();
+
+/* Dots */
+dots.forEach(function(d,i){
+  d.addEventListener("click", function(){ stopTimer(); goTo(i); startTimer(); });
+});
+
+/* Segs */
+segs.forEach(function(s,i){
+  s.addEventListener("click", function(){ stopTimer(); goTo(i); startTimer(); });
+});
+
+/* Arrows */
+if(prevBtn) prevBtn.addEventListener("click", function(){ stopTimer(); goTo(cur-1); startTimer(); });
+if(nextBtn) nextBtn.addEventListener("click", function(){ stopTimer(); goTo(cur+1); startTimer(); });
+
+/* Keyboard */
+document.addEventListener("keydown", function(e){
+  if(e.key==="ArrowLeft"){  stopTimer(); goTo(cur-1); startTimer(); }
+  if(e.key==="ArrowRight"){ stopTimer(); goTo(cur+1); startTimer(); }
+});
+
+/* Touch swipe */
+var hero = document.getElementById("heroSection");
+var tsx = 0;
+if(hero){
+  hero.addEventListener("touchstart",  function(e){ tsx = e.touches[0].clientX; }, {passive:true});
+  hero.addEventListener("touchend",    function(e){
+    var dx = e.changedTouches[0].clientX - tsx;
+    if(Math.abs(dx)>44){ stopTimer(); goTo(cur + (dx<0?1:-1)); startTimer(); }
+  }, {passive:true});
+}
+
+
+/* ══════════════════════════════════════════
+   TESTIMONIAL SLIDER
+══════════════════════════════════════════ */
+var track   = document.getElementById("tTrack");
+var tDotsEl = document.querySelectorAll(".t-dot");
+var tPrevEl = document.getElementById("tPrev");
+var tNextEl = document.getElementById("tNext");
+if(!track) return;
+
+var tCards  = track.children.length;   /* total cards */
+var tCur    = 0;
+var tTimer  = null;
+var tDUR    = 4500;
+
+function tVisible(){
+  var w = window.innerWidth;
+  if(w <= 600)  return 1;
+  if(w <= 991)  return 2;
+  return 3;
+}
+
+function tMax(){ return Math.max(0, tCards - tVisible()); }
+
+function tMove(idx){
+  tCur = Math.max(0, Math.min(idx, tMax()));
+  var shift = -(100 / tCards) * tCur;
+  track.style.transform = "translateX("+shift+"%)";
+
+  /* dots: map position to dot */
+  var pages = tDots().length;
+  tDotsEl.forEach(function(d,i){
+    var step = tMax() / Math.max(pages-1, 1);
+    var lo   = Math.round(i * step);
+    var hi   = i === pages-1 ? tMax() : Math.round((i+1)*step)-1;
+    d.classList.toggle("active", tCur>=lo && tCur<=hi);
+  });
+}
+
+function tDots(){ return [].slice.call(tDotsEl); }
+
+function tStart(){ tTimer = setInterval(function(){ tMove(tCur < tMax() ? tCur+1 : 0); }, tDUR); }
+function tStop() { clearInterval(tTimer); }
+
+tStart();
+if(tPrevEl) tPrevEl.addEventListener("click", function(){ tStop(); tMove(tCur-1); tStart(); });
+if(tNextEl) tNextEl.addEventListener("click", function(){ tStop(); tMove(tCur+1); tStart(); });
+
+tDotsEl.forEach(function(d,i){
+  d.addEventListener("click", function(){
+    tStop();
+    var step = tMax() / Math.max(tDotsEl.length-1, 1);
+    tMove(Math.round(i*step));
+    tStart();
+  });
+});
+
+/* touch swipe */
+var tSX = 0;
+track.parentElement.addEventListener("touchstart", function(e){ tSX=e.touches[0].clientX; },{passive:true});
+track.parentElement.addEventListener("touchend",   function(e){
+  var dx=e.changedTouches[0].clientX-tSX;
+  if(Math.abs(dx)>40){ tStop(); tMove(dx<0?tCur+1:tCur-1); tStart(); }
+},{passive:true});
+
+/* Re-calc on resize */
+window.addEventListener("resize", function(){ if(tCur>tMax()) tCur=tMax(); tMove(tCur); });
+
+})();
+</script>
+
+</body>
+</html>
