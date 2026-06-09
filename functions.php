@@ -12,7 +12,21 @@ function doma_theme_setup() {
  
 
 }
+
+
 add_action('after_setup_theme', 'doma_theme_setup');
+
+function doma_register_menus(){
+
+    register_nav_menus(array(
+         'primary_menu'       => 'Primary Menu',
+        'footer_company_menu'  => 'Footer Company Menu',
+        'footer_services_menu' => 'Footer Services Menu'
+
+    ));
+
+}
+add_action('after_setup_theme','doma_register_menus');
 
 
 
@@ -992,3 +1006,460 @@ function doma_cta_customizer($wp_customize) {
 
 }
 add_action('customize_register', 'doma_cta_customizer');
+
+
+// client testimonial customizer
+
+function realestate_testimonial_customizer($wp_customize) {
+
+    $wp_customize->add_section('testimonial_section', array(
+        'title'    => __('Client Review Section', 'theme'),
+        'priority' => 30,
+    ));
+
+    // Section Label
+    $wp_customize->add_setting('testimonial_label', array(
+        'default' => 'Client Reviews',
+    ));
+
+    $wp_customize->add_control('testimonial_label', array(
+        'label'   => 'Section Label',
+        'section' => 'testimonial_section',
+        'type'    => 'text',
+    ));
+
+    // Title
+    $wp_customize->add_setting('testimonial_title', array(
+        'default' => 'What Our',
+    ));
+
+    $wp_customize->add_control('testimonial_title', array(
+        'label'   => 'Title',
+        'section' => 'testimonial_section',
+        'type'    => 'text',
+    ));
+
+    // Highlight Title
+    $wp_customize->add_setting('testimonial_title_highlight', array(
+        'default' => 'Partners Say',
+    ));
+
+    $wp_customize->add_control('testimonial_title_highlight', array(
+        'label'   => 'Highlight Text',
+        'section' => 'testimonial_section',
+        'type'    => 'text',
+    ));
+
+    // Subtitle
+    $wp_customize->add_setting('testimonial_subtitle', array(
+        'default' => 'Real feedback from investors, developers and business partners across 18+ countries.',
+    ));
+
+    $wp_customize->add_control('testimonial_subtitle', array(
+        'label'   => 'Subtitle',
+        'section' => 'testimonial_section',
+        'type'    => 'textarea',
+    ));
+
+    // Rating
+    $wp_customize->add_setting('testimonial_rating', array(
+        'default' => '4.9',
+    ));
+
+    $wp_customize->add_control('testimonial_rating', array(
+        'label'   => 'Rating',
+        'section' => 'testimonial_section',
+        'type'    => 'text',
+    ));
+
+    // Review Count
+    $wp_customize->add_setting('testimonial_review_count', array(
+        'default' => 'Based on 240+ reviews',
+    ));
+
+    $wp_customize->add_control('testimonial_review_count', array(
+        'label'   => 'Review Count Text',
+        'section' => 'testimonial_section',
+        'type'    => 'text',
+    ));
+
+}
+add_action('customize_register', 'realestate_testimonial_customizer');
+
+
+function doma_client_testimonial_cpt() {
+
+    register_post_type('client_testimonial', array(
+
+        'labels' => array(
+            'name'          => 'Client Testimonials',
+            'singular_name' => 'Client Testimonial',
+            'add_new_item'  => 'Add New Testimonial',
+            'edit_item'     => 'Edit Testimonial',
+            'all_items'     => 'All Testimonials',
+        ),
+
+        'public'       => true,
+        'menu_icon'    => 'dashicons-format-quote',
+        'supports'     => array('title'),
+
+
+    ));
+}
+add_action('init', 'doma_client_testimonial_cpt');
+
+
+function doma_testimonial_metabox() {
+
+    add_meta_box(
+        'doma_testimonial_details',
+        'Testimonial Details',
+        'doma_testimonial_callback',
+        'client_testimonial',
+        'normal',
+        'high'
+    );
+
+}
+add_action('add_meta_boxes', 'doma_testimonial_metabox');
+
+function doma_testimonial_callback($post) {
+
+    $client_name = get_post_meta($post->ID, '_client_name', true);
+    $client_role = get_post_meta($post->ID, '_client_role', true);
+    $review_text = get_post_meta($post->ID, '_review_text', true);
+    $review_star = get_post_meta($post->ID, '_review_star', true);
+
+    wp_nonce_field('testimonial_nonce', 'testimonial_nonce_field');
+?>
+
+<p>
+    <label><strong>Client Name</strong></label>
+    <input type="text"
+           name="client_name"
+           value="<?php echo esc_attr($client_name); ?>"
+           style="width:100%;">
+</p>
+
+<p>
+    <label><strong>Client Role & Company</strong></label>
+    <input type="text"
+           name="client_role"
+           value="<?php echo esc_attr($client_role); ?>"
+           style="width:100%;">
+</p>
+
+<p>
+    <label><strong>Review Content</strong></label>
+    <textarea name="review_text"
+              rows="5"
+              style="width:100%;"><?php echo esc_textarea($review_text); ?></textarea>
+</p>
+
+<p>
+    <label><strong>Review Stars</strong></label>
+
+    <select name="review_star">
+        <?php for($i=1;$i<=5;$i++) : ?>
+            <option value="<?php echo $i; ?>"
+                <?php selected($review_star, $i); ?>>
+                <?php echo $i; ?> Star
+            </option>
+        <?php endfor; ?>
+    </select>
+</p>
+
+<?php
+}
+
+function doma_save_testimonial_meta($post_id) {
+
+    if (
+        !isset($_POST['testimonial_nonce_field']) ||
+        !wp_verify_nonce($_POST['testimonial_nonce_field'], 'testimonial_nonce')
+    ) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if(isset($_POST['client_name'])){
+        update_post_meta(
+            $post_id,
+            '_client_name',
+            sanitize_text_field($_POST['client_name'])
+        );
+    }
+
+    if(isset($_POST['client_role'])){
+        update_post_meta(
+            $post_id,
+            '_client_role',
+            sanitize_text_field($_POST['client_role'])
+        );
+    }
+
+    if(isset($_POST['review_text'])){
+        update_post_meta(
+            $post_id,
+            '_review_text',
+            sanitize_textarea_field($_POST['review_text'])
+        );
+    }
+
+    if(isset($_POST['review_star'])){
+        update_post_meta(
+            $post_id,
+            '_review_star',
+            intval($_POST['review_star'])
+        );
+    }
+}
+add_action('save_post_client_testimonial', 'doma_save_testimonial_meta');
+
+
+// footer customize
+function doma_footer_customizer($wp_customize){
+
+    $wp_customize->add_section('doma_footer_section', array(
+        'title'    => __('Footer Settings','doma'),
+        'priority' => 200,
+    ));
+
+    /*
+    =====================
+    Footer Logo
+    =====================
+    */
+
+    $wp_customize->add_setting('footer_logo');
+
+    $wp_customize->add_control(
+        new WP_Customize_Image_Control(
+            $wp_customize,
+            'footer_logo',
+            array(
+                'label'   => 'Footer Logo',
+                'section' => 'doma_footer_section',
+            )
+        )
+    );
+
+    /*
+    =====================
+    Description
+    =====================
+    */
+
+    $wp_customize->add_setting('footer_description');
+
+    $wp_customize->add_control(
+        'footer_description',
+        array(
+            'label'   => 'Footer Description',
+            'section' => 'doma_footer_section',
+            'type'    => 'textarea'
+        )
+    );
+
+    /*
+    =====================
+    Social Links
+    =====================
+    */
+
+    $socials = array(
+        'linkedin',
+        'twitter',
+        'instagram',
+        'youtube'
+    );
+
+    foreach($socials as $social){
+
+        $wp_customize->add_setting('footer_'.$social);
+
+        $wp_customize->add_control(
+            'footer_'.$social,
+            array(
+                'label'   => ucfirst($social).' URL',
+                'section' => 'doma_footer_section',
+                'type'    => 'url'
+            )
+        );
+    }
+
+    /*
+    =====================
+    Newsletter
+    =====================
+    */
+
+    $wp_customize->add_setting('newsletter_title');
+
+    $wp_customize->add_control(
+        'newsletter_title',
+        array(
+            'label'   => 'Newsletter Title',
+            'section' => 'doma_footer_section',
+            'type'    => 'text'
+        )
+    );
+
+    $wp_customize->add_setting('newsletter_desc');
+
+    $wp_customize->add_control(
+        'newsletter_desc',
+        array(
+            'label'   => 'Newsletter Description',
+            'section' => 'doma_footer_section',
+            'type'    => 'textarea'
+        )
+    );
+
+    /*
+    =====================
+    Copyright
+    =====================
+    */
+
+    $wp_customize->add_setting('footer_copyright');
+
+    $wp_customize->add_control(
+        'footer_copyright',
+        array(
+            'label'   => 'Copyright Text',
+            'section' => 'doma_footer_section',
+            'type'    => 'text'
+        )
+    );
+
+    /*
+    =====================
+    Bottom Links
+    =====================
+    */
+
+    $wp_customize->add_setting('privacy_policy_url');
+
+    $wp_customize->add_control(
+        'privacy_policy_url',
+        array(
+            'label'   => 'Privacy Policy URL',
+            'section' => 'doma_footer_section',
+            'type'    => 'url'
+        )
+    );
+
+    $wp_customize->add_setting('terms_url');
+
+    $wp_customize->add_control(
+        'terms_url',
+        array(
+            'label'   => 'Terms Of Service URL',
+            'section' => 'doma_footer_section',
+            'type'    => 'url'
+        )
+    );
+
+}
+add_action('customize_register','doma_footer_customizer');
+
+// Services Page Hero Customizer
+
+function doma_services_page_hero_customizer($wp_customize) {
+
+    $wp_customize->add_section('doma_services_page_hero', array(
+        'title'       => __('Services Page Hero Section', 'doma'),
+        'priority'    => 35,
+        'description' => __('Manage Services Page Hero Content', 'doma'),
+    ));
+
+    // Section Label
+    $wp_customize->add_setting('services_hero_label', array(
+        'default'           => 'What We Offer',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('services_hero_label', array(
+        'label'   => __('Section Label', 'doma'),
+        'section' => 'doma_services_page_hero',
+        'type'    => 'text',
+    ));
+
+    // Hero Title
+    $wp_customize->add_setting('services_hero_title', array(
+        'default'           => 'Our',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('services_hero_title', array(
+        'label'   => __('Hero Title', 'doma'),
+        'section' => 'doma_services_page_hero',
+        'type'    => 'text',
+    ));
+
+    // Highlight Title
+    $wp_customize->add_setting('services_hero_highlight_title', array(
+        'default'           => 'Services',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('services_hero_highlight_title', array(
+        'label'   => __('Highlight Title', 'doma'),
+        'section' => 'doma_services_page_hero',
+        'type'    => 'text',
+    ));
+
+    // Description
+    $wp_customize->add_setting('services_hero_description', array(
+        'default'           => 'Six integrated business verticals engineered for compounding value across industries and geographies.',
+        'sanitize_callback' => 'sanitize_textarea_field',
+    ));
+
+    $wp_customize->add_control('services_hero_description', array(
+        'label'   => __('Description', 'doma'),
+        'section' => 'doma_services_page_hero',
+        'type'    => 'textarea',
+    ));
+
+    // Home Text
+    $wp_customize->add_setting('services_hero_home_text', array(
+        'default'           => 'Home',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('services_hero_home_text', array(
+        'label'   => __('Home Text', 'doma'),
+        'section' => 'doma_services_page_hero',
+        'type'    => 'text',
+    ));
+
+    // Home URL
+    $wp_customize->add_setting('services_hero_home_url', array(
+        'default'           => home_url('/'),
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+
+    $wp_customize->add_control('services_hero_home_url', array(
+        'label'   => __('Home URL', 'doma'),
+        'section' => 'doma_services_page_hero',
+        'type'    => 'url',
+    ));
+
+    // Current Page Name
+    $wp_customize->add_setting('services_hero_current_page', array(
+        'default'           => 'Services',
+        'sanitize_callback' => 'sanitize_text_field',
+    ));
+
+    $wp_customize->add_control('services_hero_current_page', array(
+        'label'   => __('Current Page Name', 'doma'),
+        'section' => 'doma_services_page_hero',
+        'type'    => 'text',
+    ));
+
+}
+add_action('customize_register', 'doma_services_page_hero_customizer');

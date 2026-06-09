@@ -894,216 +894,173 @@ endif;
 <!-- ═══════════════════════════════════════════════════════
      CLIENT REVIEWS SLIDER
 ═══════════════════════════════════════════════════════ -->
+
 <section class="section-pad" style="background:var(--bg-section);position:relative;overflow:hidden;">
   <div class="geo-blob blob-navy" style="width:450px;height:450px;top:0;right:-60px;position:absolute;opacity:.35;z-index:0;"></div>
   <div class="geo-blob blob-gold" style="width:280px;height:280px;bottom:-40px;left:-50px;position:absolute;opacity:.18;z-index:0;"></div>
   <div class="grid-pattern"></div>
   <div class="container position-relative">
     <!-- Header row -->
-    <div class="row align-items-center mb-5">
-      <div class="col-lg-7 reveal">
-        <div class="section-label">Client Reviews</div>
-        <h2 class="section-title">What Our <span>Partners Say</span>
-        </h2>
-        <p class="section-subtitle" style="max-width:480px;">Real feedback from investors, developers and business partners across 18+ countries.</p>
-      </div>
-      <div class="col-lg-5 reveal delay-200">
-        <div style="display:flex;align-items:center;justify-content:flex-end;gap:16px;flex-wrap:wrap;">
-          <!-- Rating summary -->
-          <div style="text-align:center;padding:16px 22px;background:rgba(255,255,255,.04);border:1px solid rgba(188,132,43,.2);border-radius:var(--radius);">
-            <div style="font-family:var(--font-display);font-size:2.4rem;font-weight:800;color:var(--gold);line-height:1;">4.9</div>
-            <div style="display:flex;gap:3px;justify-content:center;margin:5px 0;color:var(--gold);font-size:.8rem;">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-            </div>
-            <div style="font-size:.7rem;color:var(--grey);">Based on 240+ reviews</div>
-          </div>
-          <!-- Arrow buttons -->
-          <div class="t-arrs">
-            <button class="t-arr" id="tPrev" aria-label="Previous">
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="t-arr" id="tNext" aria-label="Next">
-              <i class="fas fa-chevron-right"></i>
-            </button>
-          </div>
+<div class="row align-items-center mb-5">
+
+    <div class="col-lg-7 reveal">
+
+        <div class="section-label">
+            <?php echo esc_html(get_theme_mod('testimonial_label', 'Client Reviews')); ?>
         </div>
-      </div>
+
+        <h2 class="section-title">
+            <?php echo esc_html(get_theme_mod('testimonial_title', 'What Our')); ?>
+            <span>
+                <?php echo esc_html(get_theme_mod('testimonial_title_highlight', 'Partners Say')); ?>
+            </span>
+        </h2>
+
+        <p class="section-subtitle" style="max-width:480px;">
+            <?php echo esc_html(get_theme_mod(
+                'testimonial_subtitle',
+                'Real feedback from investors, developers and business partners across 18+ countries.'
+            )); ?>
+        </p>
+
     </div>
+
+    <div class="col-lg-5 reveal delay-200">
+
+        <div style="display:flex;align-items:center;justify-content:flex-end;gap:16px;flex-wrap:wrap;">
+
+            <!-- Rating Summary -->
+            <div style="text-align:center;padding:16px 22px;background:rgba(255,255,255,.04);border:1px solid rgba(188,132,43,.2);border-radius:var(--radius);">
+
+                <div style="font-family:var(--font-display);font-size:2.4rem;font-weight:800;color:var(--gold);line-height:1;">
+                    <?php echo esc_html(get_theme_mod('testimonial_rating', '4.9')); ?>
+                </div>
+
+                <div style="display:flex;gap:3px;justify-content:center;margin:5px 0;color:var(--gold);font-size:.8rem;">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+
+                <div style="font-size:.7rem;color:var(--grey);">
+                    <?php echo esc_html(get_theme_mod('testimonial_review_count', 'Based on 240+ reviews')); ?>
+                </div>
+
+            </div>
+
+            <!-- Arrow Buttons -->
+            <div class="t-arrs">
+                <button class="t-arr" id="tPrev" aria-label="Previous">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <button class="t-arr" id="tNext" aria-label="Next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
     <!-- Slider -->
     <div class="tslider-outer reveal delay-100">
       <div class="tslider-track" id="tTrack">
         <!-- Review 1 -->
-        <div class="tslide">
-          <div class="testimonial-card">
-            <div class="testimonial-stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-            </div>
-            <span class="quote-mark">"</span>
-            <p class="testimonial-text">Doma's team delivered our mixed-use complex 3 weeks ahead of schedule with zero cost overruns. Their project tracking system gave us real-time visibility we'd never experienced before.</p>
-            <div class="testimonial-author">
-              <div class="testimonial-avatar">AH</div>
-              <div>
-                <div class="testimonial-name">Ahmed Hassan</div>
-                <div class="testimonial-role">CEO, Gulf Properties Group</div>
-              </div>
-            </div>
-          </div>
+       <?php
+
+$args = array(
+    'post_type'      => 'client_testimonial',
+    'posts_per_page' => -1,
+    'post_status'    => 'publish'
+);
+
+$query = new WP_Query($args);
+
+if($query->have_posts()) :
+
+while($query->have_posts()) :
+$query->the_post();
+
+$client_name = get_post_meta(get_the_ID(), '_client_name', true);
+$client_role = get_post_meta(get_the_ID(), '_client_role', true);
+$review_text = get_post_meta(get_the_ID(), '_review_text', true);
+$review_star = get_post_meta(get_the_ID(), '_review_star', true);
+
+/* Generate Initials */
+
+$initials = '';
+
+if (!empty($client_name)) {
+
+    $words = explode(' ', trim($client_name));
+
+    if(count($words) >= 2){
+
+        $initials =
+            strtoupper(substr($words[0],0,1)) .
+            strtoupper(substr(end($words),0,1));
+
+    }else{
+
+        $initials = strtoupper(substr($client_name,0,2));
+
+    }
+}
+?>
+
+<div class="tslide">
+
+    <div class="testimonial-card">
+
+        <div class="testimonial-stars">
+
+            <?php for($i=1; $i <= $review_star; $i++) : ?>
+                <i class="fas fa-star"></i>
+            <?php endfor; ?>
+
         </div>
-        <!-- Review 2 -->
-        <div class="tslide">
-          <div class="testimonial-card">
-            <div class="testimonial-stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
+
+        <span class="quote-mark">"</span>
+
+        <p class="testimonial-text">
+            <?php echo esc_html($review_text); ?>
+        </p>
+
+        <div class="testimonial-author">
+
+            <div class="testimonial-avatar">
+                <?php echo esc_html($initials); ?>
             </div>
-            <span class="quote-mark">"</span>
-            <p class="testimonial-text">As an institutional investor, transparency is non-negotiable. Doma's investor dashboard and milestone reporting set a new benchmark for portfolio transparency in the region.</p>
-            <div class="testimonial-author">
-              <div class="testimonial-avatar">SK</div>
-              <div>
-                <div class="testimonial-name">Sarah Khalid</div>
-                <div class="testimonial-role">Investment Director, Meridian Capital</div>
-              </div>
+
+            <div>
+
+                <div class="testimonial-name">
+                    <?php echo esc_html($client_name); ?>
+                </div>
+
+                <div class="testimonial-role">
+                    <?php echo esc_html($client_role); ?>
+                </div>
+
             </div>
-          </div>
+
         </div>
-        <!-- Review 3 -->
-        <div class="tslide">
-          <div class="testimonial-card">
-            <div class="testimonial-stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star-half-alt"></i>
-            </div>
-            <span class="quote-mark">"</span>
-            <p class="testimonial-text">From concept to commissioning, the DomaTech partnership transformed our regional expansion. Their integrated approach across real estate and tech infrastructure is unmatched.</p>
-            <div class="testimonial-author">
-              <div class="testimonial-avatar">MR</div>
-              <div>
-                <div class="testimonial-name">Marcus Romano</div>
-                <div class="testimonial-role">COO, NovaTech Solutions</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Review 4 -->
-        <div class="tslide">
-          <div class="testimonial-card">
-            <div class="testimonial-stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-            </div>
-            <span class="quote-mark">"</span>
-            <p class="testimonial-text">Doma Holding managed our $280M infrastructure contract flawlessly. On time, on budget, and with professionalism that sets the standard for construction excellence in Saudi Arabia.</p>
-            <div class="testimonial-author">
-              <div class="testimonial-avatar">FN</div>
-              <div>
-                <div class="testimonial-name">Faris Al-Nasser</div>
-                <div class="testimonial-role">Director, Saudi Roads Authority</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Review 5 -->
-        <div class="tslide">
-          <div class="testimonial-card">
-            <div class="testimonial-stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-            </div>
-            <span class="quote-mark">"</span>
-            <p class="testimonial-text">We invested in two Doma projects and returns exceeded projections. Their investor portal is exceptional — monthly updates, real-time progress tracking, and a highly responsive IR team.</p>
-            <div class="testimonial-author">
-              <div class="testimonial-avatar">LP</div>
-              <div>
-                <div class="testimonial-name">Laura Petrov</div>
-                <div class="testimonial-role">Portfolio Manager, EuroAsia Fund</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Review 6 -->
-        <div class="tslide">
-          <div class="testimonial-card">
-            <div class="testimonial-stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-            </div>
-            <span class="quote-mark">"</span>
-            <p class="testimonial-text">Doma Marina Residences in Doha was delivered with exceptional quality. Every detail meticulously executed — from structural integrity to premium interior finishes. Truly world-class.</p>
-            <div class="testimonial-author">
-              <div class="testimonial-avatar">JA</div>
-              <div>
-                <div class="testimonial-name">Jasem Al-Ansari</div>
-                <div class="testimonial-role">Founder, Doha Lifestyle Group</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Review 7 -->
-        <div class="tslide">
-          <div class="testimonial-card">
-            <div class="testimonial-stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-            </div>
-            <span class="quote-mark">"</span>
-            <p class="testimonial-text">The SunCore Solar project was a landmark achievement. Doma's energy team brought technical depth and commercial discipline that few contractors in the region can match.</p>
-            <div class="testimonial-author">
-              <div class="testimonial-avatar">RO</div>
-              <div>
-                <div class="testimonial-name">Rania Osman</div>
-                <div class="testimonial-role">CEO, Oman Energy Authority</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Review 8 -->
-        <div class="tslide">
-          <div class="testimonial-card">
-            <div class="testimonial-stars">
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-              <i class="fas fa-star"></i>
-            </div>
-            <span class="quote-mark">"</span>
-            <p class="testimonial-text">Working with Doma on our Cairo development was a seamless experience. From permits to handover, their local expertise and global standards were evident at every milestone.</p>
-            <div class="testimonial-author">
-              <div class="testimonial-avatar">KM</div>
-              <div>
-                <div class="testimonial-name">Karim Mostafa</div>
-                <div class="testimonial-role">Managing Director, Cairo Ventures</div>
-              </div>
-            </div>
-          </div>
-        </div>
+
+    </div>
+
+</div>
+
+<?php
+endwhile;
+wp_reset_postdata();
+
+endif;
+?>
+      
       </div>
       <!-- /tTrack -->
     </div>

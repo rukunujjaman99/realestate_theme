@@ -61,6 +61,17 @@ body {
   display: none;
 }
 
+ol, ul{
+  padding:0px;
+  margin:0px;
+}
+.footer-links li a:before{
+    content:"\f054";
+    font-family:"Font Awesome 6 Free";
+    font-weight:900;
+    margin-right:8px;
+}
+
 a { color: inherit; text-decoration: none; transition: var(--transition-fast); }
 img { max-width: 100%; display: block; }
 ul { list-style: none; }
