@@ -1,63 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contact Us — Doma Holding Company</title>
-  <meta name="description" content="Get in touch with Doma Holding Company. Reach out for investment opportunities, partnerships, or project enquiries."/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
-  <link href="assets/css/style.css" rel="stylesheet"/>
-  <link href="assets/css/animations.css" rel="stylesheet"/>
-</head>
-<body>
+<?php
+// Template Name: Contact Page
 
-<div class="noise-overlay"></div>
-<button class="back-to-top" id="backToTop"><i class="fas fa-chevron-up"></i></button>
-<div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+get_header(); 
 
-<!-- MOBILE NAV -->
-<aside class="mobile-nav-panel" id="mobileNavPanel">
-  <button class="mobile-nav-close" id="mobileNavClose"><i class="fas fa-times"></i></button>
-  <nav class="mobile-nav-links">
-    <a href="index.html"    class="mobile-nav-link active">Home <i class="fas fa-chevron-right"></i></a>
-    <a href="about.html"    class="mobile-nav-link">About <i class="fas fa-chevron-right"></i></a>
-    <a href="projects.html" class="mobile-nav-link">Projects <i class="fas fa-chevron-right"></i></a>
-    <a href="status.html"   class="mobile-nav-link">Status <i class="fas fa-chevron-right"></i></a>
-    <a href="services.html" class="mobile-nav-link">Services <i class="fas fa-chevron-right"></i></a>
-    <a href="blog.html"     class="mobile-nav-link">Blog <i class="fas fa-chevron-right"></i></a>
-    <a href="contact.html"  class="mobile-nav-link">Contact <i class="fas fa-chevron-right"></i></a>
-  </nav>
-  <div style="margin-top:32px;"><a href="contact.html" class="btn-gold" style="display:flex;justify-content:center;"><i class="fas fa-paper-plane"></i>&nbsp;Get In Touch</a></div>
-</aside>
-
-<!-- ═══ NAVBAR ═══ -->
-<header class="doma-nav" id="domaNav">
-  <div class="container"><div class="nav-inner">
-    <a href="index.html" class="nav-logo">
-      <div class="" style="width: 100px; height: 40px;">
-        <img src="assets/images/doma.png" alt="" class="img-fluid" width="100%" >
-      </div>
-    
-    </a>
-    <nav class="nav-links">
-      <a href="index.html"    class="nav-link active">Home</a>
-      <a href="about.html"    class="nav-link">About</a>
-
-        <a href="projects.html" class="nav-link">Projects </a>
-        
-
-      <a href="services.html" class="nav-link">Services</a>
-      <a href="blog.html"     class="nav-link">Blog</a>
-      <a href="contact.html"  class="nav-link">Contact</a>
-    </nav>
-    <a href="contact.html" class="btn-gold nav-cta"><i class="fas fa-paper-plane"></i> Get In Touch</a>
-    <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
-  </div></div>
-</header>
-
+?>
 
 <!-- PAGE HERO -->
 <section class="page-hero" style="position:relative;overflow:hidden;">
@@ -474,65 +420,10 @@
 </section>
 
 <!-- FOOTER -->
-<footer class="doma-footer">
-  <div class="footer-main"><div class="container"><div class="row g-5">
-    <div class="col-lg-4 col-md-6">
-      <div class="footer-brand">
-       <div class="" style="width: 100px; height: 40px;">
-        <img src="assets/images/doma.png" alt="" class="img-fluid" width="100%" >
-      </div>
-        <p>A diversified holding group delivering excellence across real estate, infrastructure, technology, and investment since 2008.</p>
-        <div class="footer-social">
-          <a href="#" class="social-link-btn"><i class="fab fa-linkedin-in"></i></a>
-          <a href="#" class="social-link-btn"><i class="fab fa-twitter"></i></a>
-          <a href="#" class="social-link-btn"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="social-link-btn"><i class="fab fa-youtube"></i></a>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-2 col-md-6 col-6">
-      <div class="footer-heading">Company</div>
-      <ul class="footer-links">
-        <li><a href="about.html"    class="footer-link"><i class="fas fa-chevron-right"></i> About Us</a></li>
-        <li><a href="projects.html" class="footer-link"><i class="fas fa-chevron-right"></i> Projects</a></li>
-        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Services</a></li>
-        <li><a href="blog.html"     class="footer-link"><i class="fas fa-chevron-right"></i> Blog</a></li>
-        <li><a href="contact.html"  class="footer-link"><i class="fas fa-chevron-right"></i> Contact</a></li>
-      </ul>
-    </div>
-    <div class="col-lg-2 col-md-6 col-6">
-      <div class="footer-heading">Services</div>
-      <ul class="footer-links">
-        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Real Estate</a></li>
-        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Infrastructure</a></li>
-        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Investment</a></li>
-        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Technology</a></li>
-        <li><a href="services.html" class="footer-link"><i class="fas fa-chevron-right"></i> Energy</a></li>
-      </ul>
-    </div>
-    <div class="col-lg-4 col-md-6">
-      <div class="footer-heading">Newsletter</div>
-      <p style="font-size:.82rem;color:var(--grey);margin-bottom:6px;">Stay updated with latest projects and investment opportunities.</p>
-      <form class="newsletter-form" novalidate>
-        <div class="newsletter-input-wrap">
-          <input type="email" class="newsletter-input" placeholder="Your email address" required/>
-          <button type="submit" class="newsletter-btn">Subscribe</button>
-        </div>
-      </form>
-    </div>
-  </div></div></div>
-  <div class="container">
-    <div class="footer-bottom">
-      <div class="footer-bottom-text">© 2025 <span>Doma Holding Company</span>. All rights reserved. Crafted with precision.</div>
-      <div style="display:flex;gap:20px;flex-wrap:wrap;">
-        <a href="#" style="font-size:.75rem;color:rgba(155,155,155,.5);">Privacy Policy</a>
-        <a href="#" style="font-size:.75rem;color:rgba(155,155,155,.5);">Terms of Service</a>
-      </div>
-    </div>
-  </div>
-</footer>
+<?php get_footer(); ?>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/main.js"></script>
+
+<?php wp_footer(); ?>
+
 </body>
 </html>

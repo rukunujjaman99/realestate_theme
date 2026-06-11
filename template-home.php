@@ -444,84 +444,176 @@ $btn2_url       = get_theme_mod('about_btn2_url');
   <div class="grid-pattern"></div>
   <div class="geo-blob blob-gold" style="width:400px;height:400px;top:50px;right:-80px;position:absolute;z-index:0;"></div>
   <div class="container position-relative">
-    <div class="projects-header">
-      <div>
-        <div class="section-label reveal">Featured Projects</div>
-        <h2 class="section-title reveal delay-200">Our <span>Landmark</span> Ventures</h2>
-      </div>
-      <a href="projects.html" class="btn-outline reveal delay-400">View All <i class="fas fa-arrow-right"></i></a>
+   <div class="projects-header">
+
+    <div>
+
+        <div class="section-label reveal">
+            <?php echo esc_html(get_theme_mod('doma_projects_label', 'Featured Projects')); ?>
+        </div>
+
+        <h2 class="section-title reveal delay-200">
+            <?php echo esc_html(get_theme_mod('doma_projects_title', 'Our')); ?>
+
+            <span>
+                <?php echo esc_html(get_theme_mod('doma_projects_highlight', 'Landmark')); ?>
+            </span>
+
+            <?php echo esc_html(get_theme_mod('doma_projects_title_last', 'Ventures')); ?>
+        </h2>
+
     </div>
-    <div class="row g-4">
-      <div class="col-lg-4 col-md-6">
-        <div class="project-card card-3d reveal delay-100">
-          <div class="project-card-img">
-            <div style="width:100%;height:230px;background:linear-gradient(135deg,#1e3a52,#304A61);display:flex;align-items:center;justify-content:center;"><i class="fas fa-building" style="font-size:4rem;color:rgba(188,132,43,.3);"></i></div>
-            <div class="project-card-img-overlay">
-                    <img src="assets/images/1.jpg" alt="" class="img-fluid">
+
+    <a href="<?php echo esc_url(get_theme_mod('doma_projects_btn_url', '#')); ?>"
+       class="btn-outline reveal delay-400">
+
+        <?php echo esc_html(get_theme_mod('doma_projects_btn_text', 'View All')); ?>
+
+        <i class="fas fa-arrow-right"></i>
+
+    </a>
+
+</div>
+
+    
+   <div class="row">
+
+            <?php
+            $args = array(
+                'post_type'      => 'doma_project',
+                'post_status'    => 'publish',
+                'posts_per_page' => 6,
+                'orderby'        => 'date',
+                'order'          => 'DESC'
+            );
+
+            $projects = new WP_Query($args);
+
+            if ($projects->have_posts()) :
+
+                while ($projects->have_posts()) :
+                    $projects->the_post();
+
+                    $status      = get_post_meta(get_the_ID(), '_doma_status', true);
+                    $completion  = get_post_meta(get_the_ID(), '_doma_completion', true);
+                    $location    = get_post_meta(get_the_ID(), '_doma_location', true);
+                    $short_desc  = get_post_meta(get_the_ID(), '_doma_short_desc', true);
+
+                    $terms = get_the_terms(get_the_ID(), 'project_category');
+                    $category = (!empty($terms) && !is_wp_error($terms))
+                        ? $terms[0]->name
+                        : 'Project';
+
+                    $image = get_the_post_thumbnail_url(get_the_ID(), 'large');
+
+                    if (!$image) {
+                        $image = get_template_directory_uri() . '/assets/images/default-project.jpg';
+                    }
+
+                    switch ($status) {
+
+                        case 'completed':
+                            $status_class = 'badge-completed';
+                            $status_label = 'Completed';
+                            break;
+
+                        case 'upcoming':
+                            $status_class = 'badge-upcoming';
+                            $status_label = 'Upcoming';
+                            break;
+
+                        case 'on-hold':
+                            $status_class = 'badge-hold';
+                            $status_label = 'On Hold';
+                            break;
+
+                        default:
+                            $status_class = 'badge-ongoing';
+                            $status_label = 'Ongoing';
+                            break;
+                    }
+            ?>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="project-card card-3d reveal delay-200">
+
+                    <div class="project-card-img">
+
+                            <a href="<?php the_permalink(); ?>">
+
+        <img src="<?php echo esc_url($image); ?>"
+             alt="<?php the_title_attribute(); ?>"
+             class="img-fluid w-100">
+
+    </a>
+
+                        <div class="project-card-status">
+                            <span class="badge-status <?php echo esc_attr($status_class); ?>">
+                                <?php echo esc_html($status_label); ?>
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="project-card-body">
+
+                        <div class="project-industry">
+                            <?php echo esc_html($category); ?>
+                        </div>
+
+                        <h3 class="project-card-title">
+                            <?php the_title(); ?>
+                        </h3>
+
+                        <p class="project-card-desc">
+                            <?php echo esc_html(wp_trim_words($short_desc, 20)); ?>
+                        </p>
+
+                        <div class="project-progress-row">
+                            <span class="progress-label">Completion</span>
+                            <span class="progress-pct">
+                                <?php echo intval($completion); ?>%
+                            </span>
+                        </div>
+
+                        <div class="progress-wrap">
+                            <div class="progress-fill"
+                                 style="width:<?php echo intval($completion); ?>%;">
+                            </div>
+                        </div>
+
+                        <div class="project-meta-row">
+
+                            <div class="project-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <?php echo esc_html($location); ?>
+                            </div>
+
+                            <a href="<?php the_permalink(); ?>"
+                               class="project-arrow-btn">
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
-            <div class="project-card-status"><span class="badge-status badge-ongoing">Ongoing</span></div>
-          </div>
-          <div class="project-card-body">
-            <div class="project-industry">Real Estate</div>
-            <h3 class="project-card-title">Doma Tower — Business Bay</h3>
-            <p class="project-card-desc">42-storey Grade-A commercial tower redefining Dubai's skyline with premium office spaces and retail podium.</p>
-            <div class="project-progress-row"><span class="progress-label">Completion</span><span class="progress-pct">73%</span></div>
-            <div class="progress-wrap"><div class="progress-fill" data-width="73"></div></div>
-            <div class="project-meta-row">
-              <div class="project-location"><i class="fas fa-map-marker-alt"></i> Dubai, UAE</div>
-              <a href="project-detail.html" class="project-arrow-btn"><i class="fas fa-arrow-right"></i></a>
-            </div>
-          </div>
+
+            <?php
+                endwhile;
+                wp_reset_postdata();
+            endif;
+            ?>
+
         </div>
-      </div>
-      <div class="col-lg-4 col-md-6">
-        <div class="project-card card-3d reveal delay-200">
-          <div class="project-card-img">
-            <div style="width:100%;height:230px;background:linear-gradient(135deg,#1a2a1a,#2a3a2a);display:flex;align-items:center;justify-content:center;"><i class="fas fa-road" style="font-size:4rem;color:rgba(188,132,43,.3);"></i></div>
-            <div class="project-card-img-overlay">
-                    <img src="assets/images/2.jpg" alt="" class="img-fluid">
-            </div>
-            <div class="project-card-status"><span class="badge-status badge-completed">Completed</span></div>
-          </div>
-          <div class="project-card-body">
-            <div class="project-industry">Infrastructure</div>
-            <h3 class="project-card-title">North Ring Expressway</h3>
-            <p class="project-card-desc">68km elevated expressway connecting industrial zones to the national highway network. Delivered on time.</p>
-            <div class="project-progress-row"><span class="progress-label">Completion</span><span class="progress-pct">100%</span></div>
-            <div class="progress-wrap"><div class="progress-fill" data-width="100"></div></div>
-            <div class="project-meta-row">
-              <div class="project-location"><i class="fas fa-map-marker-alt"></i> Riyadh, KSA</div>
-              <a href="project-detail.html" class="project-arrow-btn"><i class="fas fa-arrow-right"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-6">
-        <div class="project-card card-3d reveal delay-300">
-          <div class="project-card-img">
-            <div style="width:100%;height:230px;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;"><i class="fas fa-microchip" style="font-size:4rem;color:rgba(188,132,43,.3);"></i></div>
-            <div class="project-card-img-overlay">
-                           <img src="assets/images/3.jpg" alt="" class="img-fluid">
-            </div>
-            <div class="project-card-status"><span class="badge-status badge-upcoming">Upcoming</span></div>
-          </div>
-          <div class="project-card-body">
-            <div class="project-industry">Technology</div>
-            <h3 class="project-card-title">DomaTech Innovation Hub</h3>
-            <p class="project-card-desc">50,000 sqm smart tech campus for AI startups, research labs, and enterprise R&D centers in Abu Dhabi.</p>
-            <div class="project-progress-row"><span class="progress-label">Planning</span><span class="progress-pct">28%</span></div>
-            <div class="progress-wrap"><div class="progress-fill" data-width="28"></div></div>
-            <div class="project-meta-row">
-              <div class="project-location"><i class="fas fa-map-marker-alt"></i> Abu Dhabi, UAE</div>
-              <a href="project-detail.html" class="project-arrow-btn"><i class="fas fa-arrow-right"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-    </div>
+
   </div>
 </section>
+
+
+
 
 
 <!-- ═══════════════════════════════════════════════════════
