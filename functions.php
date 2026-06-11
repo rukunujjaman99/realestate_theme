@@ -19,14 +19,40 @@ add_action('after_setup_theme', 'doma_theme_setup');
 function doma_register_menus(){
 
     register_nav_menus(array(
-         'primary_menu'       => 'Primary Menu',
-        'footer_company_menu'  => 'Footer Company Menu',
-        'footer_services_menu' => 'Footer Services Menu'
+          'primary_menu' => __('Primary Menu', 'doma'),
+          'mobile_menu'  => __('Mobile Menu', 'doma'),
+        'footer_company_menu'  => __('Footer Company Menu', 'doma'),
+        'footer_services_menu' => __('Footer Services Menu', 'doma')
 
     ));
 
 }
 add_action('after_setup_theme','doma_register_menus');
+
+/* Desktop Menu Class */
+function doma_menu_link_class($atts, $item, $args) {
+
+    if ($args->theme_location == 'primary_menu') {
+        $atts['class'] = 'nav-link';
+    }
+
+    if ($args->theme_location == 'mobile_menu') {
+        $atts['class'] = 'mobile-nav-link';
+    }
+
+    return $atts;
+}
+add_filter('nav_menu_link_attributes', 'doma_menu_link_class', 10, 3);
+
+function doma_active_menu_class($classes, $item) {
+
+    if (in_array('current-menu-item', $classes)) {
+        $classes[] = 'active';
+    }
+
+    return $classes;
+}
+add_filter('nav_menu_css_class', 'doma_active_menu_class', 10, 2);
 
 
 

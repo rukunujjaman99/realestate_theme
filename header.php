@@ -18,41 +18,89 @@
 <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
 
 <!-- MOBILE NAV -->
+<!-- MOBILE NAV -->
 <aside class="mobile-nav-panel" id="mobileNavPanel">
-  <button class="mobile-nav-close" id="mobileNavClose"><i class="fas fa-times"></i></button>
-  <nav class="mobile-nav-links">
-    <a href="index.html"    class="mobile-nav-link active">Home <i class="fas fa-chevron-right"></i></a>
-    <a href="about.html"    class="mobile-nav-link">About <i class="fas fa-chevron-right"></i></a>
-    <a href="projects.html" class="mobile-nav-link">Projects <i class="fas fa-chevron-right"></i></a>
-    <a href="status.html"   class="mobile-nav-link">Status <i class="fas fa-chevron-right"></i></a>
-    <a href="services.html" class="mobile-nav-link">Services <i class="fas fa-chevron-right"></i></a>
-    <a href="blog.html"     class="mobile-nav-link">Blog <i class="fas fa-chevron-right"></i></a>
-    <a href="contact.html"  class="mobile-nav-link">Contact <i class="fas fa-chevron-right"></i></a>
-  </nav>
-  <div style="margin-top:32px;"><a href="contact.html" class="btn-gold" style="display:flex;justify-content:center;"><i class="fas fa-paper-plane"></i>&nbsp;Get In Touch</a></div>
+
+    <button class="mobile-nav-close" id="mobileNavClose">
+        <i class="fas fa-times"></i>
+    </button>
+
+    <nav class="mobile-nav-links">
+
+        <?php
+        wp_nav_menu(array(
+            'theme_location' => 'mobile_menu',
+            'container'      => false,
+            'menu_class'     => 'mobile-menu',
+            'fallback_cb'    => false,
+            'items_wrap'     => '%3$s'
+        ));
+        ?>
+
+    </nav>
+
+    <div style="margin-top:32px;">
+        <a href="<?php echo esc_url(home_url('/contact')); ?>"
+           class="btn-gold"
+           style="display:flex;justify-content:center;">
+            <i class="fas fa-paper-plane"></i>
+            &nbsp;Get In Touch
+        </a>
+    </div>
+
 </aside>
 
 <!-- ═══ NAVBAR ═══ -->
+
+
 <header class="doma-nav" id="domaNav">
-  <div class="container"><div class="nav-inner">
-    <a href="index.html" class="nav-logo">
-      <div class="" style="width: 100px; height: 40px;">
-        <img src="assets/images/doma.png" alt="" class="img-fluid" width="100%" >
-      </div>
-    
-    </a>
-    <nav class="nav-links">
-      <a href="index.html"    class="nav-link active">Home</a>
-      <a href="about.html"    class="nav-link">About</a>
+    <div class="container">
+        <div class="nav-inner">
 
-        <a href="projects.html" class="nav-link">Projects </a>
-        
+            <!-- Logo -->
+            <a href="<?php echo esc_url(home_url('/')); ?>" class="nav-logo">
 
-      <a href="services.html" class="nav-link">Services</a>
-      <a href="blog.html"     class="nav-link">Blog</a>
-      <a href="contact.html"  class="nav-link">Contact</a>
-    </nav>
-    <a href="contact.html" class="btn-gold nav-cta"><i class="fas fa-paper-plane"></i> Get In Touch</a>
-    <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
-  </div></div>
+                <?php
+                if (has_custom_logo()) {
+                    the_custom_logo();
+                } else {
+                ?>
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/doma.png"
+                         alt="<?php bloginfo('name'); ?>"
+                         class="img-fluid">
+                <?php } ?>
+
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="nav-links">
+
+                <?php
+                wp_nav_menu(array(
+                    'theme_location' => 'primary_menu',
+                    'container'      => false,
+                    'menu_class'     => 'desktop-menu',
+                    'fallback_cb'    => false,
+                    'items_wrap'     => '%3$s'
+                ));
+                ?>
+
+            </nav>
+
+            <!-- CTA Button -->
+            <a href="<?php echo esc_url(home_url('/contact')); ?>"
+               class="btn-gold nav-cta">
+                <i class="fas fa-paper-plane"></i>
+                Get In Touch
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+        </div>
+    </div>
 </header>

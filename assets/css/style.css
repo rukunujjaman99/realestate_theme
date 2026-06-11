@@ -44,6 +44,38 @@
   --section-gap: 110px;
   
 }
+.mobile-nav-links li,
+.nav-links li{
+    list-style:none;
+}
+.nav-logo img{
+  width:150px;
+}
+.desktop-menu,
+.mobile-menu{
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+.desktop-menu li{
+    display:inline-block;
+
+}
+
+.desktop-menu li a{
+    display:inline-block;
+}
+
+.mobile-menu li{
+    display:block;
+}
+
+.mobile-menu li a{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
 
 /* ── RESET & BASE ──────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
