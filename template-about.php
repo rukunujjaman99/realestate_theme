@@ -23,137 +23,238 @@
 
 
 
+<?php
+$post_id = doma_get_about_post_id();
 
-
+if ( ! $post_id ) {
+    return;
+}
+?>
 <!-- MISSION & VISION -->
 <section class="section-pad">
-  <div class="container">
-    <div class="row g-4 mb-5" data-tab-group>
-      <div class="col-12 anim-fade-up">
-        <div class="doma-tabs">
-          <button class="doma-tab-btn active" data-tab="mission">Mission</button>
-          <button class="doma-tab-btn" data-tab="vision">Vision</button>
-          <button class="doma-tab-btn" data-tab="values">Values</button>
-        </div>
-      </div>
+    <div class="container">
+        <div class="row g-4 mb-5" data-tab-group>
 
-      <div class="col-12 anim-fade-up anim-delay-1">
-        <div data-tab-panel="mission" style="opacity:1;">
-          <div class="row align-items-center g-5">
-            <div class="col-lg-6">
-              <div class="section-label">Our Mission</div>
-              <h2 class="section-title">Creating <span>Compounding Value</span> Across Generations</h2>
-              <div class="gold-line"></div>
-              <p style="color:var(--grey);line-height:1.85;margin-bottom:20px;">
-                Our mission is to build and manage a portfolio of high-quality businesses and assets that generate superior risk-adjusted returns for our investors, create meaningful employment, and contribute positively to the communities in which we operate.
-              </p>
-              <p style="color:var(--grey);line-height:1.85;">
-                We pursue this through disciplined capital allocation, operational excellence, and a relentless focus on long-term value creation — never compromising on integrity or sustainability.
-              </p>
+            <div class="col-12 anim-fade-up">
+                <div class="doma-tabs">
+                    <button class="doma-tab-btn active" data-tab="mission">Mission</button>
+                    <button class="doma-tab-btn" data-tab="vision">Vision</button>
+                    <button class="doma-tab-btn" data-tab="values">Values</button>
+                </div>
             </div>
-            <div class="col-lg-6">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-                <div class="doma-card" style="padding:24px;text-align:center;">
-                  <i class="fas fa-bullseye" style="font-size:2rem;color:var(--gold);margin-bottom:12px;display:block;"></i>
-                  <div style="font-weight:700;margin-bottom:6px;">Focused</div>
-                  <div style="font-size:0.78rem;color:var(--grey);">Disciplined sector expertise</div>
-                </div>
-                <div class="doma-card" style="padding:24px;text-align:center;">
-                  <i class="fas fa-shield-alt" style="font-size:2rem;color:var(--gold);margin-bottom:12px;display:block;"></i>
-                  <div style="font-weight:700;margin-bottom:6px;">Resilient</div>
-                  <div style="font-size:0.78rem;color:var(--grey);">Diversified risk management</div>
-                </div>
-                <div class="doma-card" style="padding:24px;text-align:center;">
-                  <i class="fas fa-seedling" style="font-size:2rem;color:var(--gold);margin-bottom:12px;display:block;"></i>
-                  <div style="font-weight:700;margin-bottom:6px;">Sustainable</div>
-                  <div style="font-size:0.78rem;color:var(--grey);">ESG-aligned growth</div>
-                </div>
-                <div class="doma-card" style="padding:24px;text-align:center;">
-                  <i class="fas fa-users" style="font-size:2rem;color:var(--gold);margin-bottom:12px;display:block;"></i>
-                  <div style="font-weight:700;margin-bottom:6px;">People-First</div>
-                  <div style="font-size:0.78rem;color:var(--grey);">Communities we uplift</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div data-tab-panel="vision" style="display:none;">
-          <div class="row align-items-center g-5">
-            <div class="col-lg-7">
-              <div class="section-label">Our Vision</div>
-              <h2 class="section-title">To Be the <span>Most Trusted</span> Holding Group in MENA by 2035</h2>
-              <div class="gold-line"></div>
-              <p style="color:var(--grey);line-height:1.85;margin-bottom:20px;">
-                We envision Doma as the reference standard for diversified holding companies across the Middle East and North Africa — a group that institutions trust, entrepreneurs aspire to join, and communities are proud to have in their cities.
-              </p>
-              <ul style="list-style:none;padding:0;">
-                <li style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;font-size:0.9rem;color:rgba(255,255,255,0.8);">
-                  <i class="fas fa-check-circle" style="color:var(--gold);margin-top:3px;flex-shrink:0;"></i>
-                  $5 billion in assets under management by 2030
-                </li>
-                <li style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;font-size:0.9rem;color:rgba(255,255,255,0.8);">
-                  <i class="fas fa-check-circle" style="color:var(--gold);margin-top:3px;flex-shrink:0;"></i>
-                  Operations in 35+ countries across MENA, Europe & Asia
-                </li>
-                <li style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;font-size:0.9rem;color:rgba(255,255,255,0.8);">
-                  <i class="fas fa-check-circle" style="color:var(--gold);margin-top:3px;flex-shrink:0;"></i>
-                  Net-zero carbon across all property assets by 2035
-                </li>
-                <li style="display:flex;align-items:flex-start;gap:12px;font-size:0.9rem;color:rgba(255,255,255,0.8);">
-                  <i class="fas fa-check-circle" style="color:var(--gold);margin-top:3px;flex-shrink:0;"></i>
-                  Listed on two major regional stock exchanges
-                </li>
-              </ul>
-            </div>
-            <div class="col-lg-5">
-              <div style="background:linear-gradient(135deg,var(--navy-dark),var(--bg-card));border:1px solid rgba(188,132,43,0.2);border-radius:20px;padding:36px;text-align:center;">
-                <i class="fas fa-eye" style="font-size:4rem;color:var(--gold);opacity:0.5;"></i>
-                <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:var(--gold);margin:16px 0 8px;">2035</div>
-                <div style="font-size:0.9rem;color:var(--grey);">Our strategic vision horizon</div>
-              </div>
-            </div>
-          </div>
-        </div>
+            <div class="col-12 anim-fade-up anim-delay-1">
 
-        <div data-tab-panel="values" style="display:none;">
-          <div class="section-label">Core Values</div>
-          <h2 class="section-title">The <span>Principles</span> That Guide Us</h2>
-          <div class="row g-4 mt-2">
-            <div class="col-lg-3 col-md-6">
-              <div class="service-card" style="text-align:center;">
-                <div class="service-icon-wrap" style="margin:0 auto 18px;"><i class="fas fa-balance-scale"></i></div>
-                <h3 class="service-card-title">Integrity</h3>
-                <p class="service-card-desc">We operate with unwavering honesty, doing what we say and saying what we do.</p>
-              </div>
+                <!-- =========================
+                     MISSION
+                ========================== -->
+                <div data-tab-panel="mission" style="opacity:1;">
+
+                    <div class="row align-items-center g-5">
+
+                        <div class="col-lg-6">
+
+                            <div class="section-label">
+                                <?php echo esc_html(get_post_meta($post_id,'_mission_label',true)); ?>
+                            </div>
+
+                            <h2 class="section-title">
+                                <?php echo doma_parse_span(
+                                    get_post_meta($post_id,'_mission_title',true)
+                                ); ?>
+                            </h2>
+
+                            <div class="gold-line"></div>
+
+                            <p style="color:var(--grey);line-height:1.85;margin-bottom:20px;">
+                                <?php echo nl2br(esc_html(
+                                    get_post_meta($post_id,'_mission_para1',true)
+                                )); ?>
+                            </p>
+
+                            <p style="color:var(--grey);line-height:1.85;">
+                                <?php echo nl2br(esc_html(
+                                    get_post_meta($post_id,'_mission_para2',true)
+                                )); ?>
+                            </p>
+
+                        </div>
+
+                        <div class="col-lg-6">
+
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+                                <?php for($i=1;$i<=4;$i++): ?>
+
+                                    <div class="doma-card" style="padding:24px;text-align:center;">
+
+                                        <i class="fas <?php echo esc_attr(
+                                            get_post_meta($post_id,"_mission_card{$i}_icon",true)
+                                        ); ?>"
+                                           style="font-size:2rem;color:var(--gold);margin-bottom:12px;display:block;">
+                                        </i>
+
+                                        <div style="font-weight:700;margin-bottom:6px;">
+                                            <?php echo esc_html(
+                                                get_post_meta($post_id,"_mission_card{$i}_title",true)
+                                            ); ?>
+                                        </div>
+
+                                        <div style="font-size:0.78rem;color:var(--grey);">
+                                            <?php echo esc_html(
+                                                get_post_meta($post_id,"_mission_card{$i}_desc",true)
+                                            ); ?>
+                                        </div>
+
+                                    </div>
+
+                                <?php endfor; ?>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- =========================
+                     VISION
+                ========================== -->
+                <div data-tab-panel="vision" style="display:none;">
+
+                    <div class="row align-items-center g-5">
+
+                        <div class="col-lg-7">
+
+                            <div class="section-label">
+                                <?php echo esc_html(get_post_meta($post_id,'_vision_label',true)); ?>
+                            </div>
+
+                            <h2 class="section-title">
+                                <?php echo doma_parse_span(
+                                    get_post_meta($post_id,'_vision_title',true)
+                                ); ?>
+                            </h2>
+
+                            <div class="gold-line"></div>
+
+                            <p style="color:var(--grey);line-height:1.85;margin-bottom:20px;">
+                                <?php echo nl2br(esc_html(
+                                    get_post_meta($post_id,'_vision_para',true)
+                                )); ?>
+                            </p>
+
+                            <ul style="list-style:none;padding:0;">
+
+                                <?php for($i=1;$i<=4;$i++): 
+
+                                    $check = get_post_meta(
+                                        $post_id,
+                                        "_vision_check{$i}",
+                                        true
+                                    );
+
+                                    if(empty($check)) continue;
+                                ?>
+
+                                <li style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;font-size:0.9rem;color:rgba(255,255,255,0.8);">
+                                    <i class="fas fa-check-circle"
+                                       style="color:var(--gold);margin-top:3px;flex-shrink:0;"></i>
+                                    <?php echo esc_html($check); ?>
+                                </li>
+
+                                <?php endfor; ?>
+
+                            </ul>
+
+                        </div>
+
+                        <div class="col-lg-5">
+
+                            <div style="background:linear-gradient(135deg,var(--navy-dark),var(--bg-card));border:1px solid rgba(188,132,43,0.2);border-radius:20px;padding:36px;text-align:center;">
+
+                                <i class="fas fa-eye"
+                                   style="font-size:4rem;color:var(--gold);opacity:0.5;"></i>
+
+                                <div style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:var(--gold);margin:16px 0 8px;">
+                                    <?php echo esc_html(
+                                        get_post_meta($post_id,'_vision_year',true)
+                                    ); ?>
+                                </div>
+
+                                <div style="font-size:0.9rem;color:var(--grey);">
+                                    <?php echo esc_html(
+                                        get_post_meta($post_id,'_vision_year_label',true)
+                                    ); ?>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- =========================
+                     VALUES
+                ========================== -->
+                <div data-tab-panel="values" style="display:none;">
+
+                    <div class="section-label">
+                        <?php echo esc_html(get_post_meta($post_id,'_values_label',true)); ?>
+                    </div>
+
+                    <h2 class="section-title">
+                        <?php echo doma_parse_span(
+                            get_post_meta($post_id,'_values_title',true)
+                        ); ?>
+                    </h2>
+
+                    <div class="row g-4 mt-2">
+
+                        <?php for($i=1;$i<=4;$i++): ?>
+
+                        <div class="col-lg-3 col-md-6">
+
+                            <div class="service-card" style="text-align:center;">
+
+                                <div class="service-icon-wrap" style="margin:0 auto 18px;">
+                                    <i class="fas <?php echo esc_attr(
+                                        get_post_meta($post_id,"_values_card{$i}_icon",true)
+                                    ); ?>"></i>
+                                </div>
+
+                                <h3 class="service-card-title">
+                                    <?php echo esc_html(
+                                        get_post_meta($post_id,"_values_card{$i}_title",true)
+                                    ); ?>
+                                </h3>
+
+                                <p class="service-card-desc">
+                                    <?php echo esc_html(
+                                        get_post_meta($post_id,"_values_card{$i}_desc",true)
+                                    ); ?>
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <?php endfor; ?>
+
+                    </div>
+
+                </div>
+
             </div>
-            <div class="col-lg-3 col-md-6">
-              <div class="service-card" style="text-align:center;">
-                <div class="service-icon-wrap" style="margin:0 auto 18px;"><i class="fas fa-lightbulb"></i></div>
-                <h3 class="service-card-title">Innovation</h3>
-                <p class="service-card-desc">We challenge convention and embrace creative solutions to complex problems.</p>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <div class="service-card" style="text-align:center;">
-                <div class="service-icon-wrap" style="margin:0 auto 18px;"><i class="fas fa-star"></i></div>
-                <h3 class="service-card-title">Excellence</h3>
-                <p class="service-card-desc">We set high standards and hold ourselves accountable to exceeding them.</p>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <div class="service-card" style="text-align:center;">
-                <div class="service-icon-wrap" style="margin:0 auto 18px;"><i class="fas fa-hands-helping"></i></div>
-                <h3 class="service-card-title">Impact</h3>
-                <p class="service-card-desc">We measure success not just in returns, but in the positive legacy we leave.</p>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </section>
+
+<!-- MISSION & VISION -->
+
 
 
 <!-- ACHIEVEMENTS -->

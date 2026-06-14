@@ -2259,3 +2259,826 @@ function doma_projects_customizer($wp_customize){
         'type'    => 'url',
     ));
 }
+
+
+
+
+
+
+
+
+
+
+// ================================================================
+// DOMA HOLDING — Mission / Vision / Values
+// CPT + Metaboxes + Dynamic Frontend (2 separate pages)
+// All in functions.php — NO shortcode
+// ================================================================
+
+
+// ────────────────────────────────────────────────────────────────
+// 1. REGISTER CPT: doma_about
+// ────────────────────────────────────────────────────────────────
+function doma_register_about_cpt() {
+    register_post_type( 'doma_about', [
+        'label'               => 'About Section',
+        'labels'              => [
+            'name'          => 'About Sections',
+            'singular_name' => 'About Section',
+            'add_new_item'  => 'Add About Section',
+            'edit_item'     => 'Edit About Section',
+        ],
+        'public'              => false,
+        'show_ui'             => true,
+        'show_in_menu'        => true,
+        'menu_icon'           => 'dashicons-id-alt',
+        'menu_position'       => 5,
+        'supports'            => [ 'title' ],
+        'show_in_rest'        => false,
+    ]);
+}
+add_action( 'init', 'doma_register_about_cpt' );
+
+
+// ────────────────────────────────────────────────────────────────
+// 2. REGISTER ALL METABOXES
+// ────────────────────────────────────────────────────────────────
+function doma_about_add_metaboxes() {
+
+    add_meta_box(
+        'doma_mission_box',
+        '📌 Tab 1 — Mission',
+        'doma_mission_metabox_cb',
+        'doma_about', 'normal', 'high'
+    );
+
+    add_meta_box(
+        'doma_vision_box',
+        '👁 Tab 2 — Vision',
+        'doma_vision_metabox_cb',
+        'doma_about', 'normal', 'high'
+    );
+
+    add_meta_box(
+        'doma_values_box',
+        '⭐ Tab 3 — Values',
+        'doma_values_metabox_cb',
+        'doma_about', 'normal', 'high'
+    );
+}
+add_action( 'add_meta_boxes', 'doma_about_add_metaboxes' );
+
+
+// ────────────────────────────────────────────────────────────────
+// 3. METABOX FIELD HELPERS
+// ────────────────────────────────────────────────────────────────
+function doma_field_text( $post_id, $key, $label, $placeholder = '' ) {
+    $val = esc_attr( get_post_meta( $post_id, $key, true ) );
+    echo "
+    <p>
+        <label style='font-weight:600;font-size:12px;color:#555;display:block;margin-bottom:4px;'>
+            {$label}
+        </label>
+        <input
+            type='text'
+            name='{$key}'
+            value='{$val}'
+            placeholder='{$placeholder}'
+            style='width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:4px;font-size:13px;'
+        >
+    </p>";
+}
+
+function doma_field_textarea( $post_id, $key, $label, $rows = 3 ) {
+    $val = esc_textarea( get_post_meta( $post_id, $key, true ) );
+    echo "
+    <p>
+        <label style='font-weight:600;font-size:12px;color:#555;display:block;margin-bottom:4px;'>
+            {$label}
+        </label>
+        <textarea
+            name='{$key}'
+            rows='{$rows}'
+            style='width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:4px;font-size:13px;resize:vertical;'
+        >{$val}</textarea>
+    </p>";
+}
+
+function doma_group_label( $text ) {
+    echo "
+    <div style='
+        background:#f0f4f8;
+        border-left:4px solid #BC842B;
+        padding:7px 12px;
+        margin:18px 0 4px;
+        font-size:12px;
+        font-weight:700;
+        color:#304A61;
+        letter-spacing:.4px;
+    '>{$text}</div>";
+}
+
+
+// ────────────────────────────────────────────────────────────────
+// 4. METABOX CALLBACKS
+// ────────────────────────────────────────────────────────────────
+
+/* ══ MISSION ══ */
+function doma_mission_metabox_cb( $post ) {
+    wp_nonce_field( 'doma_about_save', 'doma_about_nonce' );
+    $id = $post->ID;
+
+    echo "<div style='font-family:sans-serif;padding:4px 0;'>";
+    echo "<p style='color:#888;font-size:12px;margin:0 0 12px;'>
+            Wrap gold text in titles with <code>{{double braces}}</code>
+          </p>";
+
+    doma_field_text    ( $id, '_mission_label', 'Section Label',                    'e.g. Our Mission' );
+    doma_field_text    ( $id, '_mission_title', 'Section Title  ({{gold}} text)',    'e.g. Creating {{Compounding Value}} Across Generations' );
+    doma_field_textarea( $id, '_mission_para1', 'Paragraph 1', 3 );
+    doma_field_textarea( $id, '_mission_para2', 'Paragraph 2', 3 );
+
+    for ( $i = 1; $i <= 4; $i++ ) {
+        doma_group_label( "Icon Card #{$i}" );
+        doma_field_text( $id, "_mission_card{$i}_icon",  'Font Awesome Class', 'e.g. fa-bullseye' );
+        doma_field_text( $id, "_mission_card{$i}_title", 'Card Title' );
+        doma_field_text( $id, "_mission_card{$i}_desc",  'Card Description' );
+    }
+
+    echo "</div>";
+}
+
+/* ══ VISION ══ */
+function doma_vision_metabox_cb( $post ) {
+    $id = $post->ID;
+
+    echo "<div style='font-family:sans-serif;padding:4px 0;'>";
+    echo "<p style='color:#888;font-size:12px;margin:0 0 12px;'>
+            Wrap gold text in titles with <code>{{double braces}}</code>
+          </p>";
+
+    doma_field_text    ( $id, '_vision_label',      'Section Label',                 'e.g. Our Vision' );
+    doma_field_text    ( $id, '_vision_title',      'Section Title ({{gold}} text)',  'e.g. To Be the {{Most Trusted}} Holding Group in MENA by 2035' );
+    doma_field_textarea( $id, '_vision_para',       'Paragraph', 3 );
+    doma_field_text    ( $id, '_vision_year',       'Year Highlight Box — Year',      'e.g. 2035' );
+    doma_field_text    ( $id, '_vision_year_label', 'Year Highlight Box — Sub Label', 'e.g. Our strategic vision horizon' );
+
+    for ( $i = 1; $i <= 4; $i++ ) {
+        doma_group_label( "Checklist Item #{$i}" );
+        doma_field_text( $id, "_vision_check{$i}", 'Checklist Text' );
+    }
+
+    echo "</div>";
+}
+
+/* ══ VALUES ══ */
+function doma_values_metabox_cb( $post ) {
+    $id = $post->ID;
+
+    echo "<div style='font-family:sans-serif;padding:4px 0;'>";
+    echo "<p style='color:#888;font-size:12px;margin:0 0 12px;'>
+            Wrap gold text in titles with <code>{{double braces}}</code>
+          </p>";
+
+    doma_field_text( $id, '_values_label', 'Section Label',                 'e.g. Core Values' );
+    doma_field_text( $id, '_values_title', 'Section Title ({{gold}} text)', 'e.g. The {{Principles}} That Guide Us' );
+
+    for ( $i = 1; $i <= 4; $i++ ) {
+        doma_group_label( "Value Card #{$i}" );
+        doma_field_text( $id, "_values_card{$i}_icon",  'Font Awesome Class', 'e.g. fa-balance-scale' );
+        doma_field_text( $id, "_values_card{$i}_title", 'Card Title' );
+        doma_field_text( $id, "_values_card{$i}_desc",  'Card Description' );
+    }
+
+    echo "</div>";
+}
+
+
+// ────────────────────────────────────────────────────────────────
+// 5. SAVE META
+// ────────────────────────────────────────────────────────────────
+function doma_about_save_meta( $post_id ) {
+    if (
+        ! isset( $_POST['doma_about_nonce'] )                        ||
+        ! wp_verify_nonce( $_POST['doma_about_nonce'], 'doma_about_save' ) ||
+        ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )              ||
+        ! current_user_can( 'edit_post', $post_id )
+    ) return;
+
+    // Text fields — sanitize_text_field
+    $text_fields = [
+        '_mission_label', '_mission_title',
+        '_mission_card1_icon', '_mission_card1_title', '_mission_card1_desc',
+        '_mission_card2_icon', '_mission_card2_title', '_mission_card2_desc',
+        '_mission_card3_icon', '_mission_card3_title', '_mission_card3_desc',
+        '_mission_card4_icon', '_mission_card4_title', '_mission_card4_desc',
+
+        '_vision_label', '_vision_title',
+        '_vision_year', '_vision_year_label',
+        '_vision_check1', '_vision_check2', '_vision_check3', '_vision_check4',
+
+        '_values_label', '_values_title',
+        '_values_card1_icon', '_values_card1_title', '_values_card1_desc',
+        '_values_card2_icon', '_values_card2_title', '_values_card2_desc',
+        '_values_card3_icon', '_values_card3_title', '_values_card3_desc',
+        '_values_card4_icon', '_values_card4_title', '_values_card4_desc',
+    ];
+
+    foreach ( $text_fields as $field ) {
+        if ( isset( $_POST[ $field ] ) ) {
+            update_post_meta( $post_id, $field, sanitize_text_field( $_POST[ $field ] ) );
+        }
+    }
+
+    // Textarea fields — preserve line breaks
+    $textarea_fields = [ '_mission_para1', '_mission_para2', '_vision_para' ];
+
+    foreach ( $textarea_fields as $field ) {
+        if ( isset( $_POST[ $field ] ) ) {
+            update_post_meta( $post_id, $field, sanitize_textarea_field( $_POST[ $field ] ) );
+        }
+    }
+}
+add_action( 'save_post_doma_about', 'doma_about_save_meta' );
+
+
+// ────────────────────────────────────────────────────────────────
+// 6. HELPER: {{text}} → <span>text</span>
+// ────────────────────────────────────────────────────────────────
+function doma_parse_span( $str ) {
+    return preg_replace( '/\{\{(.+?)\}\}/', '<span>$1</span>', esc_html( $str ) );
+}
+
+// ────────────────────────────────────────────────────────────────
+// HELPER: get the first published doma_about post ID
+// ────────────────────────────────────────────────────────────────
+function doma_get_about_post_id() {
+    $posts = get_posts([
+        'post_type'      => 'doma_about',
+        'post_status'    => 'publish',
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+    ]);
+    return ! empty( $posts ) ? $posts[0] : 0;
+}
+
+
+// ────────────────────────────────────────────────────────────────
+// 7. TEMPLATE LOADER
+//    Page slug "about-mission"  → Mission+Values section
+//    Page slug "about-vision"   → Vision section
+// ────────────────────────────────────────────────────────────────
+function doma_about_template_loader( $template ) {
+    if ( is_page( 'about-mission' ) || is_page( 'about-vision' ) ) {
+        return; // handled below via template_redirect
+    }
+    return $template;
+}
+
+add_action( 'template_redirect', function() {
+
+    if ( is_page( 'about-mission' ) ) {
+        $post_id = doma_get_about_post_id();
+        doma_render_mission_page( $post_id );
+        exit;
+    }
+
+    if ( is_page( 'about-vision' ) ) {
+        $post_id = doma_get_about_post_id();
+        doma_render_vision_page( $post_id );
+        exit;
+    }
+});
+
+
+
+
+// contact page template loader
+
+
+// ================================================================
+// DOMA HOLDING — Contact Page Full System
+// CPTs + Metaboxes + Form Submissions + Admin Tables + Frontend
+// ================================================================
+
+
+// ────────────────────────────────────────────────────────────────
+// 1. REGISTER CPTs
+// ────────────────────────────────────────────────────────────────
+function doma_contact_register_cpts() {
+
+    // ── CPT 1: Contact Settings (offices, strip, social, map) ──
+    register_post_type( 'doma_contact_info', [
+        'label'         => 'Contact Settings',
+        'labels'        => [
+            'name'          => 'Contact Settings',
+            'singular_name' => 'Contact Setting',
+            'add_new_item'  => 'Add Contact Setting',
+            'edit_item'     => 'Edit Contact Setting',
+        ],
+        'public'        => false,
+        'show_ui'       => true,
+        'show_in_menu'  => true,
+        'menu_icon'     => 'dashicons-phone',
+        'menu_position' => 6,
+        'supports'      => [ 'title' ],
+    ]);
+
+    // ── CPT 2: Inquiry Submissions ──
+    register_post_type( 'doma_inquiry', [
+        'label'         => 'Inquiries',
+        'labels'        => [
+            'name'          => 'Inquiries',
+            'singular_name' => 'Inquiry',
+        ],
+        'public'        => false,
+        'show_ui'       => true,
+        'show_in_menu'  => 'doma_contact_hub',
+        'supports'      => [ 'title' ],
+        'capabilities'  => [
+            'create_posts' => 'do_not_allow',
+        ],
+        'map_meta_cap'  => true,
+    ]);
+
+    // ── CPT 3: Landowner Submissions ──
+    register_post_type( 'doma_landowner', [
+        'label'         => 'Landowner Submissions',
+        'labels'        => [
+            'name'          => 'Landowner Submissions',
+            'singular_name' => 'Landowner Submission',
+        ],
+        'public'        => false,
+        'show_ui'       => true,
+        'show_in_menu'  => 'doma_contact_hub',
+        'supports'      => [ 'title' ],
+        'capabilities'  => [
+            'create_posts' => 'do_not_allow',
+        ],
+        'map_meta_cap'  => true,
+    ]);
+}
+add_action( 'init', 'doma_contact_register_cpts' );
+
+
+// ────────────────────────────────────────────────────────────────
+// 2. CUSTOM ADMIN MENU HUB  (groups all 3 under one parent)
+// ────────────────────────────────────────────────────────────────
+function doma_contact_hub_menu() {
+    add_menu_page(
+        'Doma Contact Hub',
+        'Contact Hub',
+        'manage_options',
+        'doma_contact_hub',
+        'doma_contact_hub_page',
+        'dashicons-building',
+        6
+    );
+
+    add_submenu_page(
+        'doma_contact_hub',
+        'Contact Settings',
+        '⚙ Contact Settings',
+        'manage_options',
+        'edit.php?post_type=doma_contact_info'
+    );
+
+    add_submenu_page(
+        'doma_contact_hub',
+        'Inquiries',
+        '📩 Inquiries',
+        'manage_options',
+        'edit.php?post_type=doma_inquiry'
+    );
+
+    add_submenu_page(
+        'doma_contact_hub',
+        'Landowner Submissions',
+        '🏗 Landowner Submissions',
+        'manage_options',
+        'edit.php?post_type=doma_landowner'
+    );
+}
+add_action( 'admin_menu', 'doma_contact_hub_menu' );
+
+function doma_contact_hub_page() {
+    echo '<div class="wrap"><h1>Doma Contact Hub</h1>
+    <p>Use the submenu to manage Contact Settings, view Inquiries, and Landowner Submissions.</p></div>';
+}
+
+
+// ────────────────────────────────────────────────────────────────
+// 3. METABOX FIELD HELPERS
+// ────────────────────────────────────────────────────────────────
+function doma_cf_text( $post_id, $key, $label, $placeholder = '' ) {
+    $val = esc_attr( get_post_meta( $post_id, $key, true ) );
+    echo "<p>
+        <label style='font-weight:600;font-size:12px;color:#555;display:block;margin-bottom:4px;'>{$label}</label>
+        <input type='text' name='{$key}' value='{$val}' placeholder='{$placeholder}'
+            style='width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:4px;font-size:13px;'>
+    </p>";
+}
+
+function doma_cf_url( $post_id, $key, $label, $placeholder = '' ) {
+    $val = esc_attr( get_post_meta( $post_id, $key, true ) );
+    echo "<p>
+        <label style='font-weight:600;font-size:12px;color:#555;display:block;margin-bottom:4px;'>{$label}</label>
+        <input type='url' name='{$key}' value='{$val}' placeholder='{$placeholder}'
+            style='width:100%;padding:7px 10px;border:1px solid #ddd;border-radius:4px;font-size:13px;'>
+    </p>";
+}
+
+function doma_cf_group( $label ) {
+    echo "<div style='background:#f0f4f8;border-left:4px solid #BC842B;padding:7px 12px;
+        margin:18px 0 4px;font-size:12px;font-weight:700;color:#304A61;letter-spacing:.4px;'>
+        {$label}</div>";
+}
+
+function doma_cf_readonly( $label, $value ) {
+    echo "<p>
+        <label style='font-weight:600;font-size:12px;color:#555;display:block;margin-bottom:4px;'>{$label}</label>
+        <input type='text' value='" . esc_attr($value) . "' readonly
+            style='width:100%;padding:7px 10px;border:1px solid #eee;border-radius:4px;
+            font-size:13px;background:#f9f9f9;color:#888;'>
+    </p>";
+}
+
+
+// ────────────────────────────────────────────────────────────────
+// 4. CONTACT SETTINGS METABOXES
+// ────────────────────────────────────────────────────────────────
+function doma_contact_info_metaboxes() {
+
+    add_meta_box( 'doma_strip_box',   '📞 Contact Strip',       'doma_strip_metabox_cb',   'doma_contact_info', 'normal', 'high' );
+    add_meta_box( 'doma_offices_box', '🏢 Office Cards',         'doma_offices_metabox_cb', 'doma_contact_info', 'normal', 'high' );
+    add_meta_box( 'doma_social_box',  '🔗 Social Media Links',   'doma_social_metabox_cb',  'doma_contact_info', 'normal', 'high' );
+    add_meta_box( 'doma_map_box',     '🗺 Map Section',           'doma_map_metabox_cb',     'doma_contact_info', 'normal', 'high' );
+    add_meta_box( 'doma_form_box',    '📋 Contact Form Labels',  'doma_form_metabox_cb',    'doma_contact_info', 'normal', 'high' );
+    add_meta_box( 'doma_landform_box','🏗 Landowner Form Labels', 'doma_landform_metabox_cb','doma_contact_info', 'normal', 'high' );
+}
+add_action( 'add_meta_boxes_doma_contact_info', 'doma_contact_info_metaboxes' );
+
+
+// ── Strip ──
+function doma_strip_metabox_cb( $post ) {
+    wp_nonce_field( 'doma_contact_save', 'doma_contact_nonce' );
+    $id = $post->ID;
+    doma_cf_text( $id, '_strip_phone',  'Phone Number',  '+971 4 123 4567' );
+    doma_cf_text( $id, '_strip_email',  'Email Address', 'hello@domaholding.com' );
+    doma_cf_text( $id, '_strip_hq',     'Headquarters',  'Business Bay, Dubai' );
+    doma_cf_text( $id, '_strip_hours',  'Office Hours',  'Mon–Fri, 9AM–6PM GST' );
+}
+
+// ── Offices ──
+function doma_offices_metabox_cb( $post ) {
+    $id = $post->ID;
+    $offices = [ 'dubai' => 'Dubai HQ', 'riyadh' => 'Riyadh Office', 'cairo' => 'Cairo Office' ];
+    foreach ( $offices as $key => $label ) {
+        doma_cf_group( $label );
+        doma_cf_text( $id, "_office_{$key}_name",    'Office Name',   "e.g. Headquarters — Dubai" );
+        doma_cf_text( $id, "_office_{$key}_badge",   'Badge Label',   "e.g. Main Office" );
+        doma_cf_text( $id, "_office_{$key}_address", 'Address' );
+        doma_cf_text( $id, "_office_{$key}_phone",   'Phone' );
+        doma_cf_text( $id, "_office_{$key}_email",   'Email' );
+    }
+}
+
+// ── Social ──
+function doma_social_metabox_cb( $post ) {
+    $id = $post->ID;
+    $socials = [
+        'linkedin'  => 'LinkedIn URL',
+        'twitter'   => 'Twitter / X URL',
+        'instagram' => 'Instagram URL',
+        'youtube'   => 'YouTube URL',
+        'whatsapp'  => 'WhatsApp Link',
+    ];
+    foreach ( $socials as $key => $label ) {
+        doma_cf_url( $id, "_social_{$key}", $label, 'https://' );
+    }
+}
+
+// ── Map ──
+function doma_map_metabox_cb( $post ) {
+    $id = $post->ID;
+    doma_cf_text( $id, '_map_title',       'Map Title',          'Doma Tower, Business Bay' );
+    doma_cf_text( $id, '_map_subtitle',    'Map Subtitle',       'Dubai, United Arab Emirates · 25.1857°N 55.2614°E' );
+    doma_cf_url ( $id, '_map_google_url',  'Google Maps URL',    'https://maps.google.com/?q=...' );
+    doma_cf_text( $id, '_map_section_title','Section Title ({{gold}} for span)', 'Our {{Headquarters}}' );
+}
+
+// ── Contact Form labels/enquiry types ──
+function doma_form_metabox_cb( $post ) {
+    $id = $post->ID;
+    doma_cf_text( $id, '_form_section_label', 'Section Label', 'Send a Message' );
+    doma_cf_text( $id, '_form_title',         'Form Title ({{gold}} span)', 'Tell Us About Your {{Project}}' );
+    doma_cf_text( $id, '_form_enquiry_types', 'Enquiry Types (comma-separated)',
+        'Investment Opportunity, Development Partnership, Project Enquiry, Media & Press, Career Opportunity, General Enquiry' );
+}
+
+// ── Landowner Form labels ──
+function doma_landform_metabox_cb( $post ) {
+    $id = $post->ID;
+    doma_cf_text( $id, '_landform_title',      'Form Title',        'MEET THE PROFESSIONALS' );
+    doma_cf_text( $id, '_landform_categories', 'Land Categories (comma-separated)', 'Residential, Commercial, Industrial' );
+    doma_cf_text( $id, '_landform_features',   'Attractive Features (comma-separated)', 'Corner Plot, Lake View, Main Road' );
+}
+
+
+// ────────────────────────────────────────────────────────────────
+// 5. INQUIRY SUBMISSION METABOXES (read-only view)
+// ────────────────────────────────────────────────────────────────
+function doma_inquiry_metaboxes() {
+    add_meta_box( 'doma_inquiry_data', '📩 Inquiry Details', 'doma_inquiry_data_cb', 'doma_inquiry', 'normal', 'high' );
+}
+add_action( 'add_meta_boxes_doma_inquiry', 'doma_inquiry_metaboxes' );
+
+function doma_inquiry_data_cb( $post ) {
+    $id = $post->ID;
+    $fields = [
+        '_inq_full_name'    => 'Full Name',
+        '_inq_email'        => 'Email Address',
+        '_inq_phone'        => 'Phone Number',
+        '_inq_company'      => 'Company / Organisation',
+        '_inq_enquiry_type' => 'Enquiry Type',
+        '_inq_subject'      => 'Subject',
+        '_inq_message'      => 'Message',
+        '_inq_submitted_at' => 'Submitted At',
+        '_inq_status'       => 'Status',
+    ];
+    echo "<div style='font-family:sans-serif;'>";
+    foreach ( $fields as $key => $label ) {
+        doma_cf_readonly( $label, get_post_meta( $id, $key, true ) );
+    }
+    echo "</div>";
+}
+
+
+// ────────────────────────────────────────────────────────────────
+// 6. LANDOWNER SUBMISSION METABOXES (read-only view)
+// ────────────────────────────────────────────────────────────────
+function doma_landowner_metaboxes() {
+    add_meta_box( 'doma_landowner_data', '🏗 Landowner Submission Details', 'doma_landowner_data_cb', 'doma_landowner', 'normal', 'high' );
+}
+add_action( 'add_meta_boxes_doma_landowner', 'doma_landowner_metaboxes' );
+
+function doma_landowner_data_cb( $post ) {
+    $id = $post->ID;
+    $fields = [
+        '_lo_locality'      => 'Locality',
+        '_lo_address'       => 'Address',
+        '_lo_land_size'     => 'Size of Land (Kathas)',
+        '_lo_road_width'    => 'Road Width (Feet)',
+        '_lo_category'      => 'Land Category',
+        '_lo_facing'        => 'Facing',
+        '_lo_features'      => 'Attractive Features',
+        '_lo_owner_name'    => 'Landowner Name',
+        '_lo_owner_email'   => 'Landowner Email',
+        '_lo_owner_phone'   => 'Contact Number',
+        '_lo_submitted_at'  => 'Submitted At',
+        '_lo_status'        => 'Status',
+    ];
+    echo "<div style='font-family:sans-serif;'>";
+    foreach ( $fields as $key => $label ) {
+        doma_cf_readonly( $label, get_post_meta( $id, $key, true ) );
+    }
+    echo "</div>";
+}
+
+
+// ────────────────────────────────────────────────────────────────
+// 7. SAVE CONTACT SETTINGS META
+// ────────────────────────────────────────────────────────────────
+function doma_contact_save_meta( $post_id ) {
+    if (
+        ! isset( $_POST['doma_contact_nonce'] ) ||
+        ! wp_verify_nonce( $_POST['doma_contact_nonce'], 'doma_contact_save' ) ||
+        ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) ||
+        ! current_user_can( 'edit_post', $post_id )
+    ) return;
+
+    $fields = [
+        '_strip_phone', '_strip_email', '_strip_hq', '_strip_hours',
+        '_office_dubai_name',   '_office_dubai_badge',   '_office_dubai_address',   '_office_dubai_phone',   '_office_dubai_email',
+        '_office_riyadh_name',  '_office_riyadh_badge',  '_office_riyadh_address',  '_office_riyadh_phone',  '_office_riyadh_email',
+        '_office_cairo_name',   '_office_cairo_badge',   '_office_cairo_address',   '_office_cairo_phone',   '_office_cairo_email',
+        '_social_linkedin', '_social_twitter', '_social_instagram', '_social_youtube', '_social_whatsapp',
+        '_map_title', '_map_subtitle', '_map_google_url', '_map_section_title',
+        '_form_section_label', '_form_title', '_form_enquiry_types',
+        '_landform_title', '_landform_categories', '_landform_features',
+    ];
+
+    foreach ( $fields as $field ) {
+        if ( isset( $_POST[ $field ] ) ) {
+            update_post_meta( $post_id, $field, sanitize_text_field( $_POST[ $field ] ) );
+        }
+    }
+}
+add_action( 'save_post_doma_contact_info', 'doma_contact_save_meta' );
+
+
+// ────────────────────────────────────────────────────────────────
+// 8. CUSTOM ADMIN COLUMNS — Inquiries
+// ────────────────────────────────────────────────────────────────
+function doma_inquiry_columns( $cols ) {
+    return [
+        'cb'                => $cols['cb'],
+        'title'             => 'Ref #',
+        'inq_name'          => 'Name',
+        'inq_email'         => 'Email',
+        'inq_type'          => 'Enquiry Type',
+        'inq_subject'       => 'Subject',
+        'inq_status'        => 'Status',
+        'inq_date'          => 'Submitted',
+    ];
+}
+add_filter( 'manage_doma_inquiry_posts_columns', 'doma_inquiry_columns' );
+
+function doma_inquiry_column_data( $col, $post_id ) {
+    $map = [
+        'inq_name'    => '_inq_full_name',
+        'inq_email'   => '_inq_email',
+        'inq_type'    => '_inq_enquiry_type',
+        'inq_subject' => '_inq_subject',
+        'inq_date'    => '_inq_submitted_at',
+    ];
+    if ( isset( $map[ $col ] ) ) {
+        echo esc_html( get_post_meta( $post_id, $map[ $col ], true ) );
+    }
+    if ( $col === 'inq_status' ) {
+        $status = get_post_meta( $post_id, '_inq_status', true ) ?: 'New';
+        $color  = $status === 'New' ? '#22c55e' : ( $status === 'Read' ? '#f59e0b' : '#8fa0b0' );
+        echo "<span style='background:rgba(" . ($status==='New'?'34,197,94':'245,158,11') . ",.12);
+            color:{$color};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
+            border:1px solid {$color};'>{$status}</span>";
+    }
+}
+add_action( 'manage_doma_inquiry_posts_custom_column', 'doma_inquiry_column_data', 10, 2 );
+
+
+// ────────────────────────────────────────────────────────────────
+// 9. CUSTOM ADMIN COLUMNS — Landowner Submissions
+// ────────────────────────────────────────────────────────────────
+function doma_landowner_columns( $cols ) {
+    return [
+        'cb'           => $cols['cb'],
+        'title'        => 'Ref #',
+        'lo_owner'     => 'Owner Name',
+        'lo_email'     => 'Email',
+        'lo_phone'     => 'Phone',
+        'lo_address'   => 'Address',
+        'lo_size'      => 'Land Size',
+        'lo_category'  => 'Category',
+        'lo_status'    => 'Status',
+        'lo_date'      => 'Submitted',
+    ];
+}
+add_filter( 'manage_doma_landowner_posts_columns', 'doma_landowner_columns' );
+
+function doma_landowner_column_data( $col, $post_id ) {
+    $map = [
+        'lo_owner'    => '_lo_owner_name',
+        'lo_email'    => '_lo_owner_email',
+        'lo_phone'    => '_lo_owner_phone',
+        'lo_address'  => '_lo_address',
+        'lo_size'     => '_lo_land_size',
+        'lo_category' => '_lo_category',
+        'lo_date'     => '_lo_submitted_at',
+    ];
+    if ( isset( $map[ $col ] ) ) {
+        echo esc_html( get_post_meta( $post_id, $map[ $col ], true ) );
+    }
+    if ( $col === 'lo_status' ) {
+        $status = get_post_meta( $post_id, '_lo_status', true ) ?: 'New';
+        $color  = $status === 'New' ? '#22c55e' : '#f59e0b';
+        echo "<span style='background:rgba(34,197,94,.12);color:{$color};
+            padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
+            border:1px solid {$color};'>{$status}</span>";
+    }
+}
+add_action( 'manage_doma_landowner_posts_custom_column', 'doma_landowner_column_data', 10, 2 );
+
+
+// ────────────────────────────────────────────────────────────────
+// 10. AJAX — CONTACT FORM SUBMIT
+// ────────────────────────────────────────────────────────────────
+add_action( 'wp_ajax_doma_submit_inquiry',        'doma_handle_inquiry_submission' );
+add_action( 'wp_ajax_nopriv_doma_submit_inquiry', 'doma_handle_inquiry_submission' );
+
+function doma_handle_inquiry_submission() {
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'doma_contact_nonce' ) ) {
+        wp_send_json_error( [ 'message' => 'Security check failed.' ] );
+    }
+
+    $name    = sanitize_text_field( $_POST['full_name']    ?? '' );
+    $email   = sanitize_email      ( $_POST['email']       ?? '' );
+    $phone   = sanitize_text_field( $_POST['phone']        ?? '' );
+    $company = sanitize_text_field( $_POST['company']      ?? '' );
+    $type    = sanitize_text_field( $_POST['enquiry_type'] ?? '' );
+    $subject = sanitize_text_field( $_POST['subject']      ?? '' );
+    $message = sanitize_textarea_field( $_POST['message']  ?? '' );
+
+    if ( ! $name || ! $email || ! $type || ! $message ) {
+        wp_send_json_error( [ 'message' => 'Please fill all required fields.' ] );
+    }
+    if ( ! is_email( $email ) ) {
+        wp_send_json_error( [ 'message' => 'Invalid email address.' ] );
+    }
+
+    $post_id = wp_insert_post([
+        'post_type'   => 'doma_inquiry',
+        'post_title'  => 'INQ-' . strtoupper( substr( md5( time() ), 0, 6 ) ) . ' — ' . $name,
+        'post_status' => 'publish',
+    ]);
+
+    if ( is_wp_error( $post_id ) ) {
+        wp_send_json_error( [ 'message' => 'Could not save submission.' ] );
+    }
+
+    $fields = [
+        '_inq_full_name'    => $name,
+        '_inq_email'        => $email,
+        '_inq_phone'        => $phone,
+        '_inq_company'      => $company,
+        '_inq_enquiry_type' => $type,
+        '_inq_subject'      => $subject,
+        '_inq_message'      => $message,
+        '_inq_submitted_at' => current_time( 'Y-m-d H:i:s' ),
+        '_inq_status'       => 'New',
+    ];
+    foreach ( $fields as $key => $val ) {
+        update_post_meta( $post_id, $key, $val );
+    }
+
+    wp_send_json_success( [ 'message' => 'Message sent successfully!' ] );
+}
+
+
+// ────────────────────────────────────────────────────────────────
+// 11. AJAX — LANDOWNER FORM SUBMIT
+// ────────────────────────────────────────────────────────────────
+add_action( 'wp_ajax_doma_submit_landowner',        'doma_handle_landowner_submission' );
+add_action( 'wp_ajax_nopriv_doma_submit_landowner', 'doma_handle_landowner_submission' );
+
+function doma_handle_landowner_submission() {
+    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'doma_landowner_nonce' ) ) {
+        wp_send_json_error( [ 'message' => 'Security check failed.' ] );
+    }
+
+    $owner_name  = sanitize_text_field( $_POST['owner_name']  ?? '' );
+    $owner_email = sanitize_email     ( $_POST['owner_email'] ?? '' );
+    $owner_phone = sanitize_text_field( $_POST['owner_phone'] ?? '' );
+    $address     = sanitize_text_field( $_POST['address']     ?? '' );
+
+    if ( ! $owner_name || ! $owner_email || ! $owner_phone || ! $address ) {
+        wp_send_json_error( [ 'message' => 'Please fill all required fields.' ] );
+    }
+
+    $post_id = wp_insert_post([
+        'post_type'   => 'doma_landowner',
+        'post_title'  => 'LO-' . strtoupper( substr( md5( time() ), 0, 6 ) ) . ' — ' . $owner_name,
+        'post_status' => 'publish',
+    ]);
+
+    if ( is_wp_error( $post_id ) ) {
+        wp_send_json_error( [ 'message' => 'Could not save submission.' ] );
+    }
+
+    $fields = [
+        '_lo_locality'     => sanitize_text_field( $_POST['locality']   ?? '' ),
+        '_lo_address'      => $address,
+        '_lo_land_size'    => sanitize_text_field( $_POST['land_size']  ?? '' ),
+        '_lo_road_width'   => sanitize_text_field( $_POST['road_width'] ?? '' ),
+        '_lo_category'     => sanitize_text_field( $_POST['category']   ?? '' ),
+        '_lo_facing'       => sanitize_text_field( $_POST['facing']     ?? '' ),
+        '_lo_features'     => sanitize_text_field( $_POST['features']   ?? '' ),
+        '_lo_owner_name'   => $owner_name,
+        '_lo_owner_email'  => $owner_email,
+        '_lo_owner_phone'  => $owner_phone,
+        '_lo_submitted_at' => current_time( 'Y-m-d H:i:s' ),
+        '_lo_status'       => 'New',
+    ];
+    foreach ( $fields as $key => $val ) {
+        update_post_meta( $post_id, $key, $val );
+    }
+
+    wp_send_json_success( [ 'message' => 'Submission received!' ] );
+}
+
+
+// ────────────────────────────────────────────────────────────────
+// 12. HELPER — get first published doma_contact_info post
+// ────────────────────────────────────────────────────────────────
+function doma_get_contact_settings_id() {
+    $posts = get_posts([
+        'post_type'      => 'doma_contact_info',
+        'post_status'    => 'publish',
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+    ]);
+    return ! empty( $posts ) ? $posts[0] : 0;
+}
+
+function doma_parse_gold_span( $str ) {
+    return preg_replace( '/\{\{(.+?)\}\}/', '<span style="color:var(--gold,#BC842B);">$1</span>', esc_html( $str ) );
+}

@@ -23,6 +23,7 @@ get_header();
   </div>
 </section>
 
+
 <!-- ═══ CONTACT QUICK INFO STRIP ═══ -->
 <div style="background:linear-gradient(90deg,var(--navy-dark),var(--bg-card),var(--navy-dark));border-top:1px solid rgba(188,132,43,.15);border-bottom:1px solid rgba(188,132,43,.15);">
   <div class="container">
