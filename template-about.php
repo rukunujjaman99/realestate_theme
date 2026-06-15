@@ -271,64 +271,122 @@ if ( ! $post_id ) {
         Our executive team brings together decades of expertise across finance, engineering, and technology.
       </p>
     </div>
-    <div class="row g-4 py-3">
-      <div class="col-lg-6 col-md-6 anim-fade-up anim-delay-1">
-        <div class="team-card card-3d">
-          <div class="team-img-wrap">
-            <div class="team-avatar-placeholder">KA</div>
-          </div>
-          <div class="team-card-body">
-         
-            <div class="team-socials">
-              <a href="#" class="team-social-btn"><i class="fab fa-linkedin-in"></i></a>
-              <a href="#" class="team-social-btn"><i class="fab fa-twitter"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-6 col-md-6 anim-fade-up anim-delay-2">
-           <div class="team-name">Khalid Al-Rashid</div>
-            <div class="team-role">Chairman & CEO</div>
-            <p class="team-bio">30+ years in real estate and investment banking. Former MD at MENA Capital Markets. Oxford MBA.</p>
-        <div class="content">
-        <p>
-          Doma Holding Company is a diversified holding group based in the Middle East, with a strategic focus on real estate, infrastructure, technology, and investment. Founded in 2008, Doma has rapidly grown to become one of the region's most respected and dynamic holding companies, managing a portfolio of high-quality assets and businesses across multiple sectors.
-        </p>
-        </div>
-      </div>
-     
     
-    </div>
-     <div class="row g-4 py-3">
-      <div class="col-lg-6 col-md-6 anim-fade-up anim-delay-1">
-        <div class="team-card card-3d">
-          <div class="team-img-wrap">
-            <div class="team-avatar-placeholder">KA</div>
-          </div>
-          <div class="team-card-body">
-         
-            <div class="team-socials">
-              <a href="#" class="team-social-btn"><i class="fab fa-linkedin-in"></i></a>
-              <a href="#" class="team-social-btn"><i class="fab fa-twitter"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-lg-6 col-md-6 anim-fade-up anim-delay-2">
-           <div class="team-name">Khalid Al-Rashid</div>
-            <div class="team-role">Managing Director</div>
-            <p class="team-bio">30+ years in real estate and investment banking. Former MD at MENA Capital Markets. Oxford MBA.</p>
-        <div class="content">
-        <p>
-          Doma Holding Company is a diversified holding group based in the Middle East, with a strategic focus on real estate, infrastructure, technology, and investment. Founded in 2008, Doma has rapidly grown to become one of the region's most respected and dynamic holding companies, managing a portfolio of high-quality assets and businesses across multiple sectors.
-        </p>
+
+   <?php
+$team_query = new WP_Query(array(
+    'post_type'      => 'team_member',
+    'posts_per_page' => -1,
+    'post_status'    => 'publish'
+));
+
+if($team_query->have_posts()) :
+
+while($team_query->have_posts()) :
+$team_query->the_post();
+
+$name        = get_post_meta(get_the_ID(), '_team_name', true);
+$role        = get_post_meta(get_the_ID(), '_team_role', true);
+$bio         = get_post_meta(get_the_ID(), '_team_bio', true);
+$description = get_post_meta(get_the_ID(), '_team_description', true);
+$socials     = get_post_meta(get_the_ID(), '_team_socials', true);
+
+$image = get_the_post_thumbnail_url(
+    get_the_ID(),
+    'full'
+);
+?>
+
+<div class="row g-4 py-3 align-items-center">
+
+    <!-- Team Image -->
+    <div class="col-lg-4 col-md-4 anim-fade-up anim-delay-1">
+
+        <div class="team-card card-3d">
+
+            <div class="team-img-wrap">
+
+                <div class="team-avatar-placeholder">
+
+                    <?php if($image) : ?>
+
+                        <img src="<?php echo esc_url($image); ?>"
+                             alt="<?php echo esc_attr($name); ?>"
+                             style="width:100%;height:400px;object-fit:cover;">
+
+                    <?php endif; ?>
+
+                </div>
+
+            </div>
+
+            <div class="team-card-body">
+
+                <?php if(!empty($socials)) : ?>
+
+                    <div class="team-socials">
+
+                        <?php foreach($socials as $social) : ?>
+
+                            <a href="<?php echo esc_url($social['url']); ?>"
+                               target="_blank"
+                               class="team-social-btn">
+
+                                <i class="<?php echo esc_attr($social['icon']); ?>"></i>
+
+                            </a>
+
+                        <?php endforeach; ?>
+
+                    </div>
+
+                <?php endif; ?>
+
+            </div>
+
         </div>
-      </div>
-     
-    
+
     </div>
+
+    <!-- Team Content -->
+    <div class="col-lg-8 col-md-8 anim-fade-up anim-delay-2">
+
+        <?php if($name) : ?>
+            <div class="team-name">
+                <?php echo esc_html($name); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if($role) : ?>
+            <div class="team-role">
+                <?php echo esc_html($role); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if($bio) : ?>
+            <p class="team-bio">
+                <?php echo esc_html($bio); ?>
+            </p>
+        <?php endif; ?>
+
+        <?php if($description) : ?>
+            <div class="content">
+                <p>
+                    <?php echo wp_kses_post(nl2br($description)); ?>
+                </p>
+            </div>
+        <?php endif; ?>
+
+    </div>
+
+</div>
+
+<?php
+endwhile;
+wp_reset_postdata();
+endif;
+?>
   
   </div>
 </section>
@@ -347,7 +405,7 @@ if ( ! $post_id ) {
           From a two-person office in Dubai to a multinational holding company with operations across three continents — our growth story is one of relentless vision and disciplined execution.
         </p>
         <a href="projects.html" class="btn-gold" style="margin-top:24px;">
-          <i class="fas fa-th-large"></i> View Our Projects
+          <i class="fas fa-th-large"> </i> View Our Projects
         </a>
       </div>
       <div class="col-lg-8 anim-fade-up anim-delay-2">

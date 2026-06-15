@@ -2281,12 +2281,12 @@ function doma_projects_customizer($wp_customize){
 // ────────────────────────────────────────────────────────────────
 function doma_register_about_cpt() {
     register_post_type( 'doma_about', [
-        'label'               => 'About Section',
+        'label'               => 'About page Section',
         'labels'              => [
-            'name'          => 'About Sections',
-            'singular_name' => 'About Section',
-            'add_new_item'  => 'Add About Section',
-            'edit_item'     => 'Edit About Section',
+            'name'          => 'About page Sections',
+            'singular_name' => 'About page Section',
+            'add_new_item'  => 'Add About page Section',
+            'edit_item'     => 'Edit About page Section',
         ],
         'public'              => false,
         'show_ui'             => true,
@@ -3082,3 +3082,513 @@ function doma_get_contact_settings_id() {
 function doma_parse_gold_span( $str ) {
     return preg_replace( '/\{\{(.+?)\}\}/', '<span style="color:var(--gold,#BC842B);">$1</span>', esc_html( $str ) );
 }
+
+
+
+
+
+// faq custom post type and metaboxes
+
+
+/*====================================================
+=            FAQ CUSTOM POST TYPE
+====================================================*/
+
+function doma_register_faq_cpt() {
+
+    register_post_type('doma_faq', array(
+
+        'labels' => array(
+            'name'               => 'FAQs',
+            'singular_name'      => 'FAQ',
+            'add_new'            => 'Add FAQ',
+            'add_new_item'       => 'Add New FAQ',
+            'edit_item'          => 'Edit FAQ',
+            'new_item'           => 'New FAQ',
+            'view_item'          => 'View FAQ',
+            'search_items'       => 'Search FAQs',
+            'not_found'          => 'No FAQs Found',
+        ),
+
+        'public'             => true,
+        'show_ui'            => true,
+        'show_in_menu'       => true,
+        'menu_position'      => 25,
+        'menu_icon'          => 'dashicons-editor-help',
+
+        'supports' => array(
+            'title'
+        ),
+
+        'has_archive'        => false,
+        'publicly_queryable' => false,
+        'show_in_rest'       => true,
+
+    ));
+}
+add_action('init', 'doma_register_faq_cpt');
+
+
+/*====================================================
+=            FAQ METABOX
+====================================================*/
+
+function doma_faq_metabox() {
+
+    add_meta_box(
+        'doma_faq_details',
+        'FAQ Description',
+        'doma_faq_metabox_callback',
+        'doma_faq',
+        'normal',
+        'high'
+    );
+
+}
+add_action('add_meta_boxes', 'doma_faq_metabox');
+
+
+function doma_faq_metabox_callback($post) {
+
+    wp_nonce_field(
+        'doma_faq_nonce_action',
+        'doma_faq_nonce'
+    );
+
+    $description = get_post_meta(
+        $post->ID,
+        '_faq_description',
+        true
+    );
+    ?>
+
+    <div style="padding:10px 0;">
+
+        <label style="
+            display:block;
+            font-weight:600;
+            margin-bottom:10px;
+            color:#333;
+        ">
+            FAQ Answer / Description
+        </label>
+
+        <textarea
+            name="faq_description"
+            rows="8"
+            style="
+                width:100%;
+                padding:12px;
+                border:1px solid #ddd;
+                border-radius:6px;
+            "
+        ><?php echo esc_textarea($description); ?></textarea>
+
+    </div>
+
+    <?php
+}
+
+
+/*====================================================
+=            SAVE FAQ METABOX
+====================================================*/
+
+function doma_save_faq_meta($post_id) {
+
+    if (
+        !isset($_POST['doma_faq_nonce']) ||
+        !wp_verify_nonce(
+            $_POST['doma_faq_nonce'],
+            'doma_faq_nonce_action'
+        )
+    ) {
+        return;
+    }
+
+    if (
+        defined('DOING_AUTOSAVE')
+        && DOING_AUTOSAVE
+    ) {
+        return;
+    }
+
+    if (
+        !current_user_can(
+            'edit_post',
+            $post_id
+        )
+    ) {
+        return;
+    }
+
+    if (
+        isset($_POST['faq_description'])
+    ) {
+
+        update_post_meta(
+            $post_id,
+            '_faq_description',
+            sanitize_textarea_field(
+                $_POST['faq_description']
+            )
+        );
+
+    }
+
+}
+add_action(
+    'save_post_doma_faq',
+    'doma_save_faq_meta'
+);
+
+
+/*====================================================
+=            ADMIN COLUMN
+====================================================*/
+
+function doma_faq_columns($columns) {
+
+    return array(
+        'cb'          => $columns['cb'],
+        'title'       => 'FAQ Question',
+        'description' => 'FAQ Answer',
+        'date'        => 'Date',
+    );
+
+}
+add_filter(
+    'manage_doma_faq_posts_columns',
+    'doma_faq_columns'
+);
+
+
+function doma_faq_column_content(
+    $column,
+    $post_id
+) {
+
+    if ($column == 'description') {
+
+        echo wp_trim_words(
+            get_post_meta(
+                $post_id,
+                '_faq_description',
+                true
+            ),
+            15
+        );
+
+    }
+
+}
+add_action(
+    'manage_doma_faq_posts_custom_column',
+    'doma_faq_column_content',
+    10,
+    2
+);
+
+
+
+
+
+
+// team member custom post type and metaboxes
+
+
+
+/*=========================================
+=            TEAM MEMBER CPT             =
+=========================================*/
+
+function register_team_member_cpt() {
+
+    $args = array(
+        'label' => 'Team Members',
+         'labels' => array(
+            'name' => 'Team Members',
+            'singular_name' => 'Team Member',
+            'add_new' => 'Add Team Member',
+            'add_new_item' => 'Add New Team Member',
+            'edit_item' => 'Edit Team Member',
+            'new_item' => 'New Team Member',
+            'view_item' => 'View Team Member',
+            'search_items' => 'Search Team Members',
+            'not_found' => 'No Team Members Found',
+        ),
+        'public' => true,
+        'menu_icon' => 'dashicons-groups',
+        'supports' => array(
+            'title',
+            'thumbnail'
+        ),
+        'show_in_rest' => true,
+    );
+
+    register_post_type('team_member', $args);
+
+}
+add_action('init', 'register_team_member_cpt');
+
+
+/*=========================================
+=            TEAM MEMBER METABOX         =
+=========================================*/
+
+function team_member_metabox() {
+
+    add_meta_box(
+        'team_member_details',
+        'Team Member Details',
+        'team_member_metabox_callback',
+        'team_member',
+        'normal',
+        'high'
+    );
+
+}
+add_action('add_meta_boxes', 'team_member_metabox');
+
+
+function team_member_metabox_callback($post) {
+
+    wp_nonce_field('team_member_nonce', 'team_member_nonce_field');
+
+    $name        = get_post_meta($post->ID, '_team_name', true);
+    $role        = get_post_meta($post->ID, '_team_role', true);
+    $bio         = get_post_meta($post->ID, '_team_bio', true);
+    $description = get_post_meta($post->ID, '_team_description', true);
+
+    $socials = get_post_meta($post->ID, '_team_socials', true);
+
+?>
+
+<table class="form-table">
+
+<tr>
+    <th>Name</th>
+    <td>
+        <input type="text"
+               name="team_name"
+               value="<?php echo esc_attr($name); ?>"
+               class="widefat">
+    </td>
+</tr>
+
+<tr>
+    <th>Role</th>
+    <td>
+        <input type="text"
+               name="team_role"
+               value="<?php echo esc_attr($role); ?>"
+               class="widefat">
+    </td>
+</tr>
+
+<tr>
+    <th>Team Bio</th>
+    <td>
+        <textarea name="team_bio"
+                  rows="4"
+                  class="widefat"><?php echo esc_textarea($bio); ?></textarea>
+    </td>
+</tr>
+
+<tr>
+    <th>Short Description</th>
+    <td>
+        <textarea name="team_description"
+                  rows="6"
+                  class="widefat"><?php echo esc_textarea($description); ?></textarea>
+    </td>
+</tr>
+
+<tr>
+    <th>Social Media Links</th>
+    <td>
+
+        <div id="team-social-repeater">
+
+            <?php if(!empty($socials)) : ?>
+
+                <?php foreach($socials as $social) : ?>
+
+                    <div class="team-social-row" style="margin-bottom:10px;padding:10px;border:1px solid #ddd;">
+
+                        <input type="text"
+                               name="team_social_icon[]"
+                               value="<?php echo esc_attr($social['icon']); ?>"
+                               placeholder="fab fa-linkedin-in"
+                               style="width:30%;margin-right:10px;">
+
+                        <input type="url"
+                               name="team_social_url[]"
+                               value="<?php echo esc_url($social['url']); ?>"
+                               placeholder="https://example.com"
+                               style="width:50%;margin-right:10px;">
+
+                        <button type="button" class="button remove-social">
+                            Remove
+                        </button>
+
+                    </div>
+
+                <?php endforeach; ?>
+
+            <?php else : ?>
+
+                <div class="team-social-row" style="margin-bottom:10px;padding:10px;border:1px solid #ddd;">
+
+                    <input type="text"
+                           name="team_social_icon[]"
+                           placeholder="fab fa-linkedin-in"
+                           style="width:30%;margin-right:10px;">
+
+                    <input type="url"
+                           name="team_social_url[]"
+                           placeholder="https://example.com"
+                           style="width:50%;margin-right:10px;">
+
+                    <button type="button" class="button remove-social">
+                        Remove
+                    </button>
+
+                </div>
+
+            <?php endif; ?>
+
+        </div>
+
+        <button type="button"
+                class="button button-primary"
+                id="add-social-row">
+            Add Social Media
+        </button>
+
+        <p style="margin-top:10px;">
+            Example Icons:
+            <br>
+            fab fa-linkedin-in
+            <br>
+            fab fa-twitter
+            <br>
+            fab fa-facebook-f
+            <br>
+            fab fa-instagram
+            <br>
+            fab fa-youtube
+        </p>
+
+    </td>
+</tr>
+
+</table>
+
+<script>
+jQuery(document).ready(function($){
+
+    $('#add-social-row').on('click', function(){
+
+        $('#team-social-repeater').append(`
+            <div class="team-social-row" style="margin-bottom:10px;padding:10px;border:1px solid #ddd;">
+
+                <input type="text"
+                       name="team_social_icon[]"
+                       placeholder="fab fa-linkedin-in"
+                       style="width:30%;margin-right:10px;">
+
+                <input type="url"
+                       name="team_social_url[]"
+                       placeholder="https://example.com"
+                       style="width:50%;margin-right:10px;">
+
+                <button type="button" class="button remove-social">
+                    Remove
+                </button>
+
+            </div>
+        `);
+
+    });
+
+    $(document).on('click', '.remove-social', function(){
+
+        $(this).closest('.team-social-row').remove();
+
+    });
+
+});
+</script>
+
+<?php
+}
+
+
+/*=========================================
+=            SAVE METABOX DATA           =
+=========================================*/
+
+function save_team_member_data($post_id) {
+
+    if (
+        !isset($_POST['team_member_nonce_field']) ||
+        !wp_verify_nonce(
+            $_POST['team_member_nonce_field'],
+            'team_member_nonce'
+        )
+    ) {
+        return;
+    }
+
+    update_post_meta(
+        $post_id,
+        '_team_name',
+        sanitize_text_field($_POST['team_name'])
+    );
+
+    update_post_meta(
+        $post_id,
+        '_team_role',
+        sanitize_text_field($_POST['team_role'])
+    );
+
+    update_post_meta(
+        $post_id,
+        '_team_bio',
+        sanitize_textarea_field($_POST['team_bio'])
+    );
+
+    update_post_meta(
+        $post_id,
+        '_team_description',
+        sanitize_textarea_field($_POST['team_description'])
+    );
+
+    if(isset($_POST['team_social_icon'])) {
+
+        $socials = array();
+
+        foreach($_POST['team_social_icon'] as $key => $icon) {
+
+            if(
+                !empty($icon) ||
+                !empty($_POST['team_social_url'][$key])
+            ) {
+
+                $socials[] = array(
+                    'icon' => sanitize_text_field($icon),
+                    'url'  => esc_url_raw($_POST['team_social_url'][$key])
+                );
+            }
+        }
+
+        update_post_meta(
+            $post_id,
+            '_team_socials',
+            $socials
+        );
+    }
+
+}
+add_action('save_post_team_member', 'save_team_member_data');
