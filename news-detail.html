@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doma Residences Launch — Doma Holding News</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root{--navy:#304A61;--navy-dark:#1e3048;--navy-light:#3d5a73;--gold:#BC842B;--gold-light:#d4a24e;--gold-pale:#f5e9d4;--white:#ffffff;--off-white:#f8f6f2;--gray-100:#f1ede8;--gray-200:#e0d8cc;--gray-400:#9a8f82;--gray-600:#5c5347;--text:#1a1410;--font-display:'Cormorant Garamond',serif;--font-body:'Inter',sans-serif;--transition:0.3s ease;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--font-body);background:var(--white);color:var(--text);line-height:1.6;}
+
+  /* NAV */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:0 4rem;background:rgba(30,48,72,0.96);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:space-between;height:80px;border-bottom:1px solid rgba(188,132,43,0.2);}
+  .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .nav-logo-icon{width:44px;height:44px;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--white);}
+  .nav-logo-text{display:flex;flex-direction:column;}
+  .nav-logo-name{font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--white);letter-spacing:2px;}
+  .nav-logo-sub{font-size:0.6rem;color:var(--gold);letter-spacing:3px;text-transform:uppercase;}
+  .nav-links{display:flex;align-items:center;gap:2.5rem;list-style:none;}
+  .nav-links a{color:rgba(255,255,255,0.8);text-decoration:none;font-size:0.8rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;transition:var(--transition);}
+  .nav-links a:hover,.nav-links a.active{color:var(--gold);}
+  .nav-dropdown{position:relative;}
+  .nav-dropdown-menu{position:absolute;top:calc(100% + 16px);left:50%;transform:translateX(-50%);background:var(--navy-dark);border:1px solid rgba(188,132,43,0.2);min-width:180px;padding:0.5rem 0;opacity:0;visibility:hidden;transition:var(--transition);border-top:2px solid var(--gold);}
+  .nav-dropdown:hover .nav-dropdown-menu{opacity:1;visibility:visible;}
+  .nav-dropdown-menu a{display:block;padding:0.6rem 1.2rem;font-size:0.75rem;white-space:nowrap;}
+  .nav-cta{background:var(--gold);color:var(--white)!important;padding:10px 24px;letter-spacing:1.5px;font-weight:600;}
+
+  /* ARTICLE HERO */
+  .article-hero{margin-top:80px;background:var(--navy-dark);position:relative;overflow:hidden;}
+  .hero-img{height:480px;background:linear-gradient(150deg,#1e3048 0%,#304A61 60%,#1a3a50 100%);display:flex;align-items:center;justify-content:center;font-size:8rem;color:rgba(255,255,255,0.06);position:relative;}
+  .hero-img-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(30,48,72,0.95) 0%,rgba(30,48,72,0.3) 60%,transparent 100%);}
+  .hero-meta-bar{position:absolute;bottom:0;left:0;right:0;padding:2.5rem 4rem;}
+  .hero-meta-inner{max-width:900px;margin:0 auto;}
+  .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:1.2rem;font-size:0.72rem;color:rgba(255,255,255,0.35);}
+  .breadcrumb a{color:rgba(255,255,255,0.35);text-decoration:none;transition:var(--transition);}
+  .breadcrumb a:hover{color:var(--gold);}
+  .breadcrumb span{color:var(--gold);}
+  .article-badge{display:inline-block;padding:4px 14px;font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--white);margin-bottom:1rem;}
+  .badge-launch{background:#2d5a3d;}
+  .badge-award{background:var(--gold);}
+  .badge-press{background:var(--navy);}
+  .article-headline{font-family:var(--font-display);font-size:clamp(1.8rem,3.5vw,3rem);font-weight:600;color:var(--white);line-height:1.15;margin-bottom:1.5rem;max-width:800px;}
+  .article-header-meta{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;}
+  .ameta-item{display:flex;align-items:center;gap:6px;font-size:0.72rem;color:rgba(255,255,255,0.4);}
+  .ameta-item i{color:var(--gold);font-size:0.65rem;}
+  .hero-bar-line{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+
+  /* SHARE BAR */
+  .share-bar{position:fixed;left:1.5rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:0.6rem;z-index:100;}
+  .share-icon{width:38px;height:38px;background:var(--white);border:1px solid var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--gray-400);cursor:pointer;transition:var(--transition);}
+  .share-icon:hover{background:var(--gold);color:var(--white);border-color:var(--gold);}
+  .share-label{writing-mode:vertical-rl;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--gray-400);text-align:center;margin-bottom:0.3rem;}
+
+  /* ARTICLE LAYOUT */
+  .article-wrap{max-width:1200px;margin:0 auto;padding:4rem 4rem 5rem;display:grid;grid-template-columns:1fr 300px;gap:4rem;}
+
+  /* ARTICLE BODY */
+  .article-lead{font-family:var(--font-display);font-size:1.25rem;color:var(--navy-dark);line-height:1.6;font-weight:400;margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--gray-200);}
+  .article-body p{font-size:0.92rem;line-height:1.85;color:var(--gray-600);margin-bottom:1.4rem;}
+  .article-body h2{font-family:var(--font-display);font-size:1.8rem;font-weight:600;color:var(--navy-dark);margin:2.5rem 0 1rem;line-height:1.2;}
+  .article-body h3{font-family:var(--font-display);font-size:1.3rem;font-weight:600;color:var(--navy);margin:2rem 0 0.8rem;}
+  .article-body blockquote{border-left:3px solid var(--gold);padding:1.2rem 1.8rem;margin:2rem 0;background:var(--gray-100);}
+  .article-body blockquote p{font-family:var(--font-display);font-size:1.15rem;color:var(--navy-dark);font-style:italic;margin:0;}
+  .article-body blockquote cite{display:block;font-size:0.78rem;color:var(--gray-400);margin-top:0.5rem;font-style:normal;}
+  .article-body ul{margin:0.5rem 0 1.5rem 1.5rem;}
+  .article-body ul li{font-size:0.88rem;color:var(--gray-600);line-height:1.7;margin-bottom:0.3rem;}
+
+  /* STATS CALLOUT */
+  .stats-callout{background:var(--navy-dark);padding:2.5rem;margin:2.5rem 0;display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;text-align:center;}
+  .sc-num{font-family:var(--font-display);font-size:2.5rem;color:var(--gold);font-weight:600;line-height:1;}
+  .sc-label{font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.3rem;}
+
+  /* IMAGE BLOCK */
+  .article-img-block{margin:2rem 0;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);height:320px;display:flex;align-items:center;justify-content:center;font-size:5rem;color:rgba(255,255,255,0.08);}
+  .img-caption{font-size:0.72rem;color:var(--gray-400);margin-top:0.5rem;font-style:italic;}
+
+  /* TAGS & SHARE */
+  .article-tags{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin:3rem 0 2rem;}
+  .article-tag{padding:5px 12px;border:1px solid var(--gray-200);font-size:0.7rem;color:var(--gray-600);cursor:pointer;transition:var(--transition);}
+  .article-tag:hover{background:var(--navy);color:var(--white);border-color:var(--navy);}
+  .share-row{display:flex;align-items:center;gap:1rem;padding:1.5rem 0;border-top:1px solid var(--gray-200);border-bottom:1px solid var(--gray-200);}
+  .share-label-row{font-size:0.72rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);font-weight:600;}
+  .share-btns{display:flex;gap:0.5rem;}
+  .share-btn{width:36px;height:36px;border:1px solid var(--gray-200);display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--gray-400);cursor:pointer;transition:var(--transition);}
+  .share-btn:hover{background:var(--navy);color:var(--white);border-color:var(--navy);}
+
+  /* CONTACT CTA */
+  .press-contact{background:var(--off-white);padding:2rem;margin:2.5rem 0;display:flex;gap:1.5rem;align-items:center;}
+  .press-contact-icon{width:52px;height:52px;background:var(--navy);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.2rem;flex-shrink:0;}
+  .press-contact-title{font-family:var(--font-display);font-size:1.1rem;color:var(--navy-dark);margin-bottom:0.3rem;}
+  .press-contact-info{font-size:0.8rem;color:var(--gray-600);}
+  .press-contact-info a{color:var(--gold);text-decoration:none;}
+
+  /* RELATED */
+  .related-section{margin-top:4rem;}
+  .s-label{font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;}
+  .s-title{font-family:var(--font-display);font-size:2rem;font-weight:600;color:var(--navy-dark);margin-bottom:2rem;}
+  .related-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;}
+  .related-card{border:1px solid var(--gray-200);cursor:pointer;transition:var(--transition);}
+  .related-card:hover{border-color:var(--gold);transform:translateY(-3px);}
+  .related-img{height:140px;display:flex;align-items:center;justify-content:center;font-size:2rem;color:rgba(255,255,255,0.12);}
+  .related-body{padding:1.2rem;}
+  .related-cat{font-size:0.62rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;font-weight:600;}
+  .related-title{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--navy-dark);line-height:1.3;transition:var(--transition);}
+  .related-card:hover .related-title{color:var(--gold);}
+  .related-date{font-size:0.65rem;color:var(--gray-400);margin-top:0.4rem;}
+
+  /* SIDEBAR */
+  .article-sidebar{display:flex;flex-direction:column;gap:2rem;}
+  .sidebar-widget{background:var(--white);border:1px solid var(--gray-200);padding:1.5rem;}
+  .widget-title{font-family:var(--font-display);font-size:1rem;font-weight:600;color:var(--navy-dark);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:2px solid var(--gold);}
+  .stat-row{display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--gray-100);}
+  .stat-row:last-child{border:none;}
+  .stat-label{font-size:0.74rem;color:var(--gray-400);}
+  .stat-val{font-size:0.82rem;color:var(--navy-dark);font-weight:600;}
+  .recent-news-item{padding:0.7rem 0;border-bottom:1px solid var(--gray-100);cursor:pointer;}
+  .recent-news-item:last-child{border:none;}
+  .recent-news-title{font-size:0.78rem;color:var(--navy-dark);font-weight:500;line-height:1.4;margin-bottom:3px;transition:var(--transition);}
+  .recent-news-item:hover .recent-news-title{color:var(--gold);}
+  .recent-news-date{font-size:0.66rem;color:var(--gray-400);}
+  .media-btn{display:block;width:100%;padding:10px;background:var(--navy);color:var(--white);border:none;font-family:var(--font-body);font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;cursor:pointer;transition:var(--transition);text-align:center;text-decoration:none;margin-top:0.8rem;}
+  .media-btn:hover{background:var(--gold);}
+
+  /* FOOTER */
+  .footer{background:var(--navy-dark);color:rgba(255,255,255,0.7);padding:5rem 4rem 0;margin-top:5rem;}
+  .footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,0.08);}
+  .footer-brand-name{font-family:var(--font-display);font-size:1.5rem;color:var(--white);letter-spacing:3px;margin-bottom:0.3rem;}
+  .footer-brand-sub{font-size:0.6rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+  .footer-desc{font-size:0.8rem;line-height:1.7;color:rgba(255,255,255,0.5);margin-bottom:1.5rem;}
+  .footer-social{display:flex;gap:0.8rem;}
+  .social-icon{width:36px;height:36px;border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.8rem;color:rgba(255,255,255,0.5);transition:var(--transition);}
+  .social-icon:hover{background:var(--gold);border-color:var(--gold);color:var(--white);}
+  .footer-heading{font-family:var(--font-display);font-size:0.9rem;color:var(--white);letter-spacing:2px;text-transform:uppercase;margin-bottom:1.2rem;}
+  .footer-links{list-style:none;display:flex;flex-direction:column;gap:0.5rem;}
+  .footer-links a{color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.8rem;transition:var(--transition);display:flex;align-items:center;gap:6px;}
+  .footer-links a::before{content:'—';color:var(--gold);font-size:0.6rem;}
+  .footer-links a:hover{color:var(--gold);padding-left:4px;}
+  .footer-contact-item{display:flex;gap:0.8rem;margin-bottom:0.8rem;}
+  .footer-contact-icon{color:var(--gold);font-size:0.8rem;margin-top:2px;}
+  .footer-contact-text{font-size:0.78rem;color:rgba(255,255,255,0.5);}
+  .footer-bottom{display:flex;align-items:center;justify-content:space-between;padding:1.5rem 0;font-size:0.72rem;color:rgba(255,255,255,0.3);}
+  .footer-bottom a{color:var(--gold);text-decoration:none;}
+
+  @media(max-width:1100px){.article-wrap{grid-template-columns:1fr;}.share-bar{display:none;}.related-grid{grid-template-columns:1fr 1fr;}.stats-callout{grid-template-columns:1fr 1fr;}}
+  @media(max-width:768px){.nav{padding:0 1.5rem;}.nav-links{display:none;}.hero-meta-bar,.article-wrap,.footer{padding-left:1.5rem;padding-right:1.5rem;}.related-grid{grid-template-columns:1fr;}.press-contact{flex-direction:column;gap:1rem;}.footer-top{grid-template-columns:1fr;}.stats-callout{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">DH</div>
+    <div class="nav-logo-text"><span class="nav-logo-name">DOMA</span><span class="nav-logo-sub">Holding</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li class="nav-dropdown">
+      <a href="about.html">Company <i class="fa fa-angle-down" style="font-size:0.65rem;"></i></a>
+      <div class="nav-dropdown-menu">
+        <a href="about.html">About Us</a>
+        <a href="life.html">Life at Doma</a>
+        <a href="career.html">Careers</a>
+        <a href="clients.html">Our Clients</a>
+      </div>
+    </li>
+    <li><a href="news.html" class="active">News</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="contact.html" class="nav-cta">Invest Now</a></li>
+  </ul>
+</nav>
+
+<!-- SHARE BAR -->
+<div class="share-bar">
+  <div class="share-label">Share</div>
+  <div class="share-icon"><i class="fab fa-linkedin-in"></i></div>
+  <div class="share-icon"><i class="fab fa-twitter"></i></div>
+  <div class="share-icon"><i class="fab fa-whatsapp"></i></div>
+  <div class="share-icon"><i class="fa fa-link"></i></div>
+</div>
+
+<!-- ARTICLE HERO -->
+<section class="article-hero">
+  <div class="hero-img">
+    <i class="fa fa-building"></i>
+    <div class="hero-img-overlay"></div>
+    <div class="hero-bar-line"></div>
+  </div>
+  <div class="hero-meta-bar">
+    <div class="hero-meta-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a> <i class="fa fa-angle-right" style="font-size:0.6rem;"></i>
+        <a href="news.html">News & Events</a> <i class="fa fa-angle-right" style="font-size:0.6rem;"></i>
+        <span>Project Launch</span>
+      </div>
+      <span class="article-badge badge-launch">Project Launch</span>
+      <h1 class="article-headline">Doma Launches Doma Residences: 214 Ultra-Luxury Units in Business Bay Fully Subscribed at Launch</h1>
+      <div class="article-header-meta">
+        <div class="ameta-item"><i class="fa fa-calendar"></i> June 12, 2025</div>
+        <div class="ameta-item"><i class="fa fa-clock"></i> 4 min read</div>
+        <div class="ameta-item"><i class="fa fa-eye"></i> 12,481 views</div>
+        <div class="ameta-item"><i class="fa fa-map-marker-alt"></i> Dubai, UAE</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLE CONTENT -->
+<div class="article-wrap">
+  <article>
+    <p class="article-lead">Doma Holding's most anticipated residential launch of 2025 — Doma Residences, Business Bay — sold out across all 214 units in 72 hours, achieving AED 1.6 billion in combined sales value and drawing investors from 19 countries to an exclusive launch event at Atlantis The Palm.</p>
+
+    <div class="article-body">
+      <p>The sellout represents Doma Holding's fastest-ever launch absorption rate, surpassing the previous record set by Palm Lagoon Residences in 2022. The development, comprising a 47-storey tower with studios through to 5-bedroom sky villas, achieved an average selling price of AED 2,800 per square foot — a new benchmark for Business Bay, which traditionally commands AED 2,100–2,400/sqft for comparable grade product.</p>
+
+      <div class="stats-callout">
+        <div><div class="sc-num">214</div><div class="sc-label">Units Sold</div></div>
+        <div><div class="sc-num">AED 1.6B</div><div class="sc-label">Total Sales Value</div></div>
+        <div><div class="sc-num">72 hrs</div><div class="sc-label">To Full Subscription</div></div>
+      </div>
+
+      <h2>The Launch Event</h2>
+      <p>Over 400 high-net-worth individuals, family offices, and institutional investors attended the VIP launch at Atlantis The Palm's Saffron Ballroom on June 10th. Guests were given an immersive AR walkthrough of all unit types and access to a real-time reservation portal, with units being reserved at a pace of approximately three per hour throughout the evening.</p>
+
+      <blockquote>
+        <p>"Doma Residences represents the clearest signal yet that Business Bay has graduated from a commercial hub to a genuine luxury residential destination. The depth of international demand we saw in 72 hours reflects both the quality of the product and the strength of the Doma brand globally."</p>
+        <cite>— Abdullah Al-Doma, Chairman & CEO, Doma Holding</cite>
+      </blockquote>
+
+      <p>The launch attracted particular interest from European buyers (32% of reservations), who cited Dubai's tax-neutral environment and the strength of the euro against the dirham as key factors. Indian and South Asian investors accounted for 28% of reservations, with the remainder split across GCC, Russian, and other international buyers.</p>
+
+      <div class="article-img-block"><i class="fa fa-city"></i></div>
+      <p class="img-caption">The Doma Residences launch event at Atlantis The Palm, June 10, 2025</p>
+
+      <h2>Project Specifications</h2>
+      <p>Doma Residences will deliver 214 units across three distinct residence types: Standard Residences (floors 8–30), Premium Residences (floors 31–42), and Sky Villas (floors 43–47). All units feature floor-to-ceiling glazing, smart home integration by Crestron, and direct connectivity to the Dubai Metro's Business Bay station via an enclosed climate-controlled walkway.</p>
+
+      <h3>Key Amenities</h3>
+      <ul>
+        <li>Sky Club on level 44 — residents-only lounge, co-working, and dining</li>
+        <li>50-metre infinity pool with panoramic Business Bay Canal views</li>
+        <li>Private cinema with 22 seats and streaming concierge</li>
+        <li>Full-floor wellness centre with gym, spa, and meditation studio</li>
+        <li>24-hour concierge, valet, and dedicated building manager</li>
+        <li>5-star hotel-service optional package through Doma's hospitality arm</li>
+      </ul>
+
+      <h2>Delivery & Investment Outlook</h2>
+      <p>Doma Residences is scheduled for handover in Q4 2027, with construction commencing on July 1, 2025. Investors on the original launch price can anticipate capital appreciation of 18–25% by handover, based on current trajectory modelling — though Doma advises all investors to conduct independent investment analysis appropriate to their individual circumstances.</p>
+
+      <p>A 70/30 payment plan structure (70% over construction, 30% on handover) was offered to all launch buyers. A small number of units were reserved for institutional cash buyers at a 3% premium, all of which were taken within 48 hours.</p>
+    </div>
+
+    <!-- TAGS -->
+    <div class="article-tags">
+      <span style="font-size:0.7rem;color:var(--gray-400);margin-right:0.3rem;letter-spacing:1px;text-transform:uppercase;">Tags:</span>
+      <span class="article-tag">Project Launch</span>
+      <span class="article-tag">Business Bay</span>
+      <span class="article-tag">Residential</span>
+      <span class="article-tag">AED 1.6B</span>
+      <span class="article-tag">2025</span>
+    </div>
+
+    <!-- SHARE -->
+    <div class="share-row">
+      <span class="share-label-row">Share this article</span>
+      <div class="share-btns">
+        <div class="share-btn"><i class="fab fa-linkedin-in"></i></div>
+        <div class="share-btn"><i class="fab fa-twitter"></i></div>
+        <div class="share-btn"><i class="fab fa-whatsapp"></i></div>
+        <div class="share-btn"><i class="fa fa-envelope"></i></div>
+        <div class="share-btn"><i class="fa fa-link"></i></div>
+      </div>
+    </div>
+
+    <!-- PRESS CONTACT -->
+    <div class="press-contact">
+      <div class="press-contact-icon"><i class="fa fa-envelope-open-text"></i></div>
+      <div>
+        <div class="press-contact-title">Media Enquiries</div>
+        <div class="press-contact-info">For press enquiries, interview requests, or high-resolution assets, contact our media team at <a href="mailto:media@domaholding.ae">media@domaholding.ae</a> or call <a href="tel:+97144000000">+971 4 400 0000</a>.</div>
+      </div>
+    </div>
+
+    <!-- RELATED NEWS -->
+    <div class="related-section">
+      <p class="s-label">More News</p>
+      <h2 class="s-title">Related Stories</h2>
+      <div class="related-grid">
+        <div class="related-card" onclick="location.href='news-detail.html'">
+          <div class="related-img" style="background:linear-gradient(135deg,#2a3a1e,#3d5a2d);"><i class="fa fa-award"></i></div>
+          <div class="related-body">
+            <div class="related-cat">Award</div>
+            <div class="related-title">Doma Named UAE's Best Developer 2025 at Arabian Property Awards</div>
+            <div class="related-date">May 30, 2025</div>
+          </div>
+        </div>
+        <div class="related-card" onclick="location.href='news-detail.html'">
+          <div class="related-img" style="background:linear-gradient(135deg,#1a2a3a,#2d4a6b);"><i class="fa fa-leaf"></i></div>
+          <div class="related-body">
+            <div class="related-cat">Sustainability</div>
+            <div class="related-title">Doma Commits to Net-Zero Carbon Across All New Developments by 2030</div>
+            <div class="related-date">May 18, 2025</div>
+          </div>
+        </div>
+        <div class="related-card" onclick="location.href='news-detail.html'">
+          <div class="related-img" style="background:linear-gradient(135deg,#3a2a1e,#6b4a2d);"><i class="fa fa-handshake"></i></div>
+          <div class="related-body">
+            <div class="related-cat">Partnership</div>
+            <div class="related-title">Doma Signs Strategic Partnership with Marriott International</div>
+            <div class="related-date">May 8, 2025</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- SIDEBAR -->
+  <aside class="article-sidebar">
+    <div class="sidebar-widget" style="position:sticky;top:100px;">
+      <h3 class="widget-title">Project Snapshot</h3>
+      <div class="stat-row"><span class="stat-label">Location</span><span class="stat-val">Business Bay, Dubai</span></div>
+      <div class="stat-row"><span class="stat-label">Units</span><span class="stat-val">214</span></div>
+      <div class="stat-row"><span class="stat-label">Height</span><span class="stat-val">47 Storeys</span></div>
+      <div class="stat-row"><span class="stat-label">GDV</span><span class="stat-val">AED 1.6B</span></div>
+      <div class="stat-row"><span class="stat-label">Avg. PSF</span><span class="stat-val">AED 2,800</span></div>
+      <div class="stat-row"><span class="stat-label">Handover</span><span class="stat-val">Q4 2027</span></div>
+      <div class="stat-row"><span class="stat-label">Status</span><span class="stat-val" style="color:#2d8a4e;font-weight:700;">Fully Subscribed</span></div>
+    </div>
+
+    <div class="sidebar-widget">
+      <h3 class="widget-title">Latest News</h3>
+      <div class="recent-news-item">
+        <div class="recent-news-title">Doma Named UAE's Best Developer 2025</div>
+        <div class="recent-news-date">May 30, 2025</div>
+      </div>
+      <div class="recent-news-item">
+        <div class="recent-news-title">Net-Zero Carbon Commitment by 2030</div>
+        <div class="recent-news-date">May 18, 2025</div>
+      </div>
+      <div class="recent-news-item">
+        <div class="recent-news-title">Marriott International Partnership</div>
+        <div class="recent-news-date">May 8, 2025</div>
+      </div>
+      <div class="recent-news-item">
+        <div class="recent-news-title">Q1 2025: AED 2.1B Revenue, +38% YoY</div>
+        <div class="recent-news-date">April 28, 2025</div>
+      </div>
+    </div>
+
+    <div class="sidebar-widget">
+      <h3 class="widget-title">Media Resources</h3>
+      <p style="font-size:0.78rem;color:var(--gray-400);line-height:1.6;margin-bottom:0.5rem;">Download official press kit, hi-res images, and executive quotes.</p>
+      <a href="#" class="media-btn"><i class="fa fa-download" style="margin-right:5px;"></i>Download Press Kit</a>
+    </div>
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand-name">DOMA</div>
+      <div class="footer-brand-sub">Holding Group</div>
+      <p class="footer-desc">Redefining real estate excellence across the UAE and MENA region.</p>
+      <div class="footer-social">
+        <div class="social-icon"><i class="fab fa-linkedin-in"></i></div>
+        <div class="social-icon"><i class="fab fa-instagram"></i></div>
+        <div class="social-icon"><i class="fab fa-twitter"></i></div>
+        <div class="social-icon"><i class="fab fa-youtube"></i></div>
+      </div>
+    </div>
+    <div>
+      <h4 class="footer-heading">Company</h4>
+      <ul class="footer-links">
+        <li><a href="about.html">About Doma</a></li>
+        <li><a href="life.html">Life at Doma</a></li>
+        <li><a href="career.html">Careers</a></li>
+        <li><a href="clients.html">Our Clients</a></li>
+        <li><a href="news.html">News & Events</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="footer-heading">Services</h4>
+      <ul class="footer-links">
+        <li><a href="services.html">Development</a></li>
+        <li><a href="services.html">Investment</a></li>
+        <li><a href="services.html">Asset Management</a></li>
+        <li><a href="projects.html">Portfolio</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="footer-heading">Media Contact</h4>
+      <div class="footer-contact-item"><i class="fa fa-map-marker-alt footer-contact-icon"></i><span class="footer-contact-text">Doma Tower, Business Bay, Dubai, UAE</span></div>
+      <div class="footer-contact-item"><i class="fa fa-phone footer-contact-icon"></i><span class="footer-contact-text">+971 4 400 0000</span></div>
+      <div class="footer-contact-item"><i class="fa fa-envelope footer-contact-icon"></i><span class="footer-contact-text">media@domaholding.ae</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Doma Holding Group. All rights reserved.</span>
+    <span><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms of Use</a></span>
+  </div>
+</footer>
+</body>
+</html>
